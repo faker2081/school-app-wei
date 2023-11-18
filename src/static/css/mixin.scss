@@ -1,0 +1,214 @@
+/* 边框颜色 */
+$uni-border-grey-color:#E7E7E7;//灰色
+$uni-border-red-color:#F53F3F;//红色
+/* 文字颜色 */
+$uni-font-color:rgba(0,0,0,.9);//黑色
+$uni-font-red-color:#F53F3F;//红色
+$uni-font-yellow-color:#FF9F18;//黄色
+$uni-font-blue-color:#3775F6;//蓝色
+/* 背景*/
+$uni-bg-color-white:#fff;
+/* 文字大小 */
+$uni-font-12:24rpx;
+$uni-font-14:28rpx;
+$uni-font-16:32rpx;
+$uni-font-20:40rpx;
+
+@mixin border-radius($radius) {
+  border-radius: $radius;
+}
+
+%textEllipsis {
+  //一行截断
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+//清除浮动
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+//flex居中
+%flex-center {
+  display: flex;
+  align-items: center;
+}
+@mixin flex-center {
+   @extend %flex-center;
+}
+//竖行排列
+%flex-column {
+  display: flex;
+  flex-direction: column;
+}
+@mixin flex-column {
+  @extend %flex-column
+}
+//绝对居中
+%flex-center-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@mixin flex-center-center{
+  @extend %flex-center-center
+}
+/**表单外框统一样式
+ height[容器高度]
+ margin[距离上下距离]
+ */
+@mixin form-box($margin) {
+  width: calc(100% - 48rpx);
+  border-radius: 10px;
+  margin: $margin auto 0;
+  background-color: var(--uni-bg-color-white) ;
+  box-sizing: border-box;
+  padding: 0 24rpx;
+  overflow: hidden;
+  position: relative;
+  &:first-child {
+    margin-top: 6rpx;
+  }
+  &:last-child {
+    margin-bottom: 60rpx;
+  }
+}
+//小图标样式
+@mixin icon-text($bg,$border-width:1px,$border-color,$color:#fff) {
+  border-radius: 5px;
+  border: $border-width solid $border-color;
+  box-sizing: border-box;
+  color: $color;
+  font-size: 10px;
+  background: $bg;
+  padding:2rpx 6rpx;
+  margin-right: 10rpx;
+}
+//商品图
+@mixin productImage($width,$height){
+  width: $width;
+  height: $height;
+  position: relative;
+  overflow:hidden;
+  border-radius: 8rpx;
+}
+//按钮
+@mixin button($bg,$border-color,$color){
+  box-sizing: border-box;
+  border: 1px solid $border-color;
+  background: $bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 168rpx;
+  height: 68rpx;
+  border-radius: 34px;
+  color: $color;
+  font-size: 28rpx;
+  margin-left: 24rpx;
+}
+//圆角按钮
+@mixin radius-Button($bg,$color){
+  box-sizing: border-box;
+  background: $bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 240rpx;
+  height: 72rpx;
+  border-radius: 50px;
+  color: $color;
+  font-size: 32rpx;
+  letter-spacing: 1px;
+}
+//小按钮
+@mixin small-button($color){
+  box-sizing: border-box;
+  border: 1px solid $color;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 88rpx;
+  height: 40rpx;
+  border-radius: 34px;
+  color: $color;
+  font-size: 24rpx;
+  margin-left: 12rpx;
+  padding-right: 0;
+  padding-left: 0;
+}
+//确认按钮
+@mixin sure-button-style($bg,$color:#fff,$border:$bg){
+  height: 88rpx;
+  border-radius: 16rpx;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  overflow: hidden;
+  background-color: $bg;
+  border: 1px solid $border;
+  color:$color;
+  font-size: var(--uni-font-size-16);
+  margin: 24rpx auto;
+  letter-spacing: 1px;
+}
+
+@mixin grey-small-button-box {
+  font-size: var(--uni-font-size-12);
+  color: var(--uni-text-input-color);
+  padding: 10rpx;
+  background: #F4F4F4;
+  border-radius: 8rpx;
+  line-height: 1;
+}
+//下方容器
+@mixin bottom-box {
+  position: fixed;
+  bottom: 0;
+  width: calc(100vw - 64rpx);
+  padding: 0 32rpx;
+  z-index: 99;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.sure-button {
+  flex: 1;
+  @include sure-button-style($uni-font-blue-color)
+}
+.return-button {
+  width: 160rpx;
+  @include sure-button-style($uni-font-red-color);
+  margin: 24rpx 16rpx 24rpx 0;
+}
+.white-sure-button {
+  flex: 1;
+  @include sure-button-style($uni-bg-color-white,$uni-font-color,#F3F3F3);
+  margin: 24rpx 16rpx 24rpx 0;
+}
+.yellow-small-button {
+  @include small-button($uni-font-yellow-color);
+}
+.red-small-button {
+  @include small-button($uni-font-red-color);
+}
+.blue-small-button {
+  @include small-button($uni-font-blue-color);
+}
+
+.grey-button{
+  @include button(none,$uni-border-grey-color,$uni-font-color)
+}
+.red-button{
+  @include button(none,$uni-border-red-color,$uni-font-red-color)
+}

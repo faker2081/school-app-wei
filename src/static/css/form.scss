@@ -1,0 +1,115 @@
+//input
+::v-deep .uv-form-item__body__left__content__label {
+  font-size: 16px;
+}
+
+::v-deep .uv-form-item__body__left__content__required {
+  position: relative;
+  left: 0;
+}
+
+::v-deep .uv-form-item__body__left__content {
+  align-items: flex-start;
+}
+
+::v-deep .uni-input-input {
+  font-size: 16px;
+  color: var(--uni-text-input-color);
+}
+
+::v-deep .uv-form-item__body {
+  padding: 32rpx 0 !important;
+
+}
+
+.uv-form-item__body__right__content__slot {
+  justify-content: flex-end;
+}
+
+
+.requireStar {
+  width: 97px;
+  font-size: 16px;
+}
+
+.requireStar:after {
+  content: ' *';
+  color: rgba(255, 59, 48, 1);
+  font-size: 100%;
+}
+
+//上传
+.uv-upload__button {
+  border-radius: 5px !important;
+}
+
+.uv-form-item__body__left {
+  align-items: flex-start !important;
+}
+
+.uv-upload__deletable {
+  border-radius: 5px;
+  border-bottom-left-radius: 5px !important;
+  width: 16px;
+  height: 16px;
+
+  .uv-upload__deletable__icon {
+    transform: scale(1);
+    top: 2px;
+    right: 1px;
+  }
+}
+
+uni-button:after {
+  border: 0;
+}
+
+//checkbox
+.uv-checkbox__icon-wrap {
+  border-width: 2px!important;
+}
+.uv-border-bottom:last-child {
+  border: 0!important;
+}
+::v-deep .uv-checkbox__icon-wrap--disabled {
+  background-color: rgba(0,0,0,0) !important;
+  border-color: rgb(200, 201, 204,.5)!important;
+}
+
+//model
+.uni-modal {
+  width: 100vw;
+  border-radius:15rpx;
+  max-width:650rpx;
+  .uni-modal__hd {
+    padding: 64rpx 24rpx 0;
+    .uni-modal__title {
+      font-weight: bold;
+      font-size: var(--uni-font-size-16);
+    }
+  }
+  .uni-modal__bd {
+    font-size: var(--uni-font-size-16);
+    padding:20rpx 20rpx 60rpx;
+  }
+  .uni-modal__ft {
+    line-height: 112rpx;
+  }
+  .uni-modal__btn {
+    font-size: var(--uni-font-size-16);
+  }
+  .uni-modal__btn_primary {
+    font-weight: bold;
+  }
+}
+
+//list
+.uv-list,.uv-list-item {
+  background-color: rgba(0,0,0,0)!important;
+}
+
+//image
+uni-image {
+  width: 100%;
+  height: 100%;
+}

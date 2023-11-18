@@ -1,0 +1,211 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+
+		// 登录
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/login/phone-login",
+			"style": {
+				"navigationBarTitleText": "手机登录",
+				"enablePullDownRefresh": false
+			}
+		},{
+			"path": "pages/my/forgot-password",
+			"style": {
+				"navigationBarTitleText": "找回密码",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/my/forgot-verification",
+			"style": {
+				"navigationBarTitleText": "获取验证码",
+				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/my/set-password",
+			"style": {
+				"navigationBarTitleText": "设置新密码",
+				"enablePullDownRefresh": false
+			}
+		},
+		//	订单详情
+		{
+			"path": "pages/purchase/order/orderDetail",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//	订单
+		{
+			"path": "pages/purchase/order/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//	餐用具消毒 - 卡片页
+		{
+			"path": "pages/school/disinfect/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//	餐用具消毒 - 表单页
+		{
+			"path": "pages/school/disinfect/disinfectForm",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		 //	餐厨废弃物 - 卡片页
+		 {
+		 	"path": "pages/school/castoff/index",
+		 	"style": {
+		 		"navigationStyle": "custom"
+		 	}
+		 },
+		 //	餐厨废弃物 - 表单页
+		 {
+		 	"path": "pages/school/castoff/castoffForm",
+		 	"style": {
+		 		"navigationStyle": "custom"
+		 	}
+		 },
+		//	食品留样 - 卡片页
+		{
+			"path": "pages/school/foodReserved/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		 //	食品留样 - 表单页
+		 {
+		 	"path": "pages/school/foodReserved/foodReservedForm",
+		 	"style": {
+		 		"navigationStyle": "custom"
+		 	}
+		 },
+		//	企业信息
+		{
+			"path": "pages/purchase/mine/company",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/purchase/mine/companyBasic",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//	首页
+		{
+			"path": "pages/purchase/index/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//	定向报价
+		{
+			"path": "pages/purchase/offer/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/purchase/offer/orientPriceSheet",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/purchase/offer/business",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/purchase/offer/addProduct",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/purchase/offer/offerList",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/school/foodSample/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		// 菜品管理
+		{
+			"path": "pages/school/foodKind/foodKindForm",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//人员管理 - 卡片页
+		{
+			"path": "pages/school/employed/employedList",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//人员管理 - 添加页
+		{
+			"path": "pages/school/employed/employedForm",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//晨检 - 人员选择
+		{
+			"path": "pages/school/employedCheck/choosePeople",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//晨检 - 卡片页
+		{
+			"path": "pages/school/employedCheck/employedCheckList",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		//晨检 - 添加页
+		{
+			"path": "pages/school/employedCheck/employedCheckForm",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		// 购物车
+		{
+			"path": "pages/school/shopping/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}
+
+
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"rpxCalcMaxDeviceWidth": 750,
+		"rpxCalcBaseDeviceWidth": 375,
+		"rpxCalcIncludeWidth": 750,
+		"dynamicRpx": true
+	}
+}

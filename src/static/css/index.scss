@@ -1,0 +1,61 @@
+@import "button";
+@import "layout";
+@import "mixin";
+@import "form";
+
+.header-top {
+  padding-top: 44px;
+}
+//灰色背景最外层容器
+.box {
+  min-height: 100vh;
+  background-color: var(--uni-bg-color);
+  display: flex;
+  flex-direction: column;
+}
+//订单按钮容器
+.button-box {
+  position: absolute;
+  bottom: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  right: 24rpx;
+}
+//下方确定按钮容器
+.sure-button-box {
+  @include bottom-box;
+}
+//底部白色背景
+.bottom-box {
+  @include bottom-box;
+}
+//订单详情按钮容器
+.small-button-box {
+  margin-top: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+//去除滚动条
+.scroll-none {
+  ::v-deep .uni-scroll-view::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+//空状态容器
+.empty-box {
+  @include form-box(24rpx);
+  padding: 50rpx 0 15rpx;
+}
+
+//蓝色圆角按钮
+.final-button {
+  @include radius-Button(#3775F6,#fff)
+}
+//红色删除按钮
+.clear-button {
+  @include radius-Button(rgba(255, 27, 27, .2),#FF1B1B)
+}
+

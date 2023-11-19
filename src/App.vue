@@ -22,7 +22,9 @@ export default {
 </script>
 
 <style lang="scss">
+  @import '@/uni_modules/uv-ui-tools/index.scss';
 	/*每个页面公共css */
 	@import './uni.scss';
   @import "./static/iconfont/iconfont.css";
+  @import '@climblee/uv-ui/index.scss';
 </style>

@@ -58,4 +58,15 @@
 .clear-button {
   @include radius-Button(rgba(255, 27, 27, .2),#FF1B1B)
 }
+.tab-box {
+  overflow: hidden;
+}
+.bottom-copyright {
+  padding: 5px 20px;
+  text-align: left;
+  position: fixed;
+  color: #333333;
+  font-size: 14px;
+  bottom: 10px!important;
+}
 

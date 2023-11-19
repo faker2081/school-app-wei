@@ -5,8 +5,15 @@
            :activeStyle="{fontWeight: 'bold',color:'var(--uni-text-color-blue)'}"
            :itemStyle="{padding:`${padding}`,lineHeight:'44px',fontSize:'16px'}"
            :inactive-style="{color:'rgba(0,0,0,.9)'}"
-           @click="changeTab" ></uv-tabs>
+           @click="changeTab"></uv-tabs>
     </view>
+    <scroll-view class="content-box" scrollY style="height: 100%;">
+      qwe
+      TODO: 问题列表
+      <view class="problems-box" v-show="false">
+        <text class="problems-content">123</text></view>
+    </scroll-view> 
+      
 		<view class="bottom-copyright" >
       <view>以上内容没有你想要的答案?</view>
       <view>可加入微校源用户QQ群「{{ qqGroup }}」获取帮助</view>
@@ -47,5 +54,28 @@ const changeTab = (e) => {
 }
 </script>
 <style scoped lang="scss">
-  @import '@/static/css/index.scss';
+// 禁用滚动条
+
+.problems-box{
+  text-align: left;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 13px;
+  font-family: 'ArialMT', 'Arial', sans-serif;
+  color: #333333;
+
+  width: 80%;
+  margin: 20px 20px;
+  line-height: 24px;
+  text-indent: 2em;
+  word-wrap: break-word;
+  word-break: break-all;
+  background-color: rgb(242, 242, 242);
+}
+
+.box {
+  background-color: #FFF;
+  width: 100%;
+}
+
 </style>

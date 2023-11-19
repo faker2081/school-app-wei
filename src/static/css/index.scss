@@ -3,6 +3,10 @@
 @import "mixin";
 @import "form";
 
+// 字体设置
+.font{
+  font-family: 'ArialMT', 'Arial', sans-serif;
+}
 .header-top {
   padding-top: 44px;
 }
@@ -12,6 +16,7 @@
   background-color: var(--uni-bg-color);
   display: flex;
   flex-direction: column;
+  padding: 0px 24rpx;
 }
 //订单按钮容器
 .button-box {
@@ -59,9 +64,11 @@
   @include radius-Button(rgba(255, 27, 27, .2),#FF1B1B)
 }
 .tab-box {
+  @extend .font;
   overflow: hidden;
 }
 .bottom-copyright {
+  @extend .font;
   padding: 5px 20px;
   text-align: left;
   position: fixed;

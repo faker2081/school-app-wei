@@ -26,5 +26,4 @@ export default {
 	/*每个页面公共css */
 	@import './uni.scss';
   @import "./static/iconfont/iconfont.css";
-  @import '@climblee/uv-ui/index.scss';
 </style>

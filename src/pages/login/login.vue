@@ -44,23 +44,26 @@
 
    // 账号登录
    let accountLogin = async (e) => {
-     if (!form.loginName || !form.loginPwd) {
-       uni.showToast({title: '用户名或密码不能为空', icon: 'none'});
-       return;
-     }
-     let res = await proxy.http.asyncPost(api.accountLogin, {
-       username: form.loginName.trim(),
-       password: getAES(form.loginPwd),
-       grant_type: 'password',
-     }, true, "HEADER_JSON", "password", true);
-     if (res.code === 0) {
-       //存token
-       uni.setStorageSync('token', res.data.accessToken);
-       getLoginInfo();
-       getMenu();
-     } else {
-       uni.showToast({title: res.msg, icon: 'none'});
-     }
+    uni.navigateTo({
+      url: '/pages/schoolForum/index/index'
+    });
+    //  if (!form.loginName || !form.loginPwd) {
+    //    uni.showToast({title: '用户名或密码不能为空', icon: 'none'});
+    //    return;
+    //  }
+    //  let res = await proxy.http.asyncPost(api.accountLogin, {
+    //    username: form.loginName.trim(),
+    //    password: getAES(form.loginPwd),
+    //    grant_type: 'password',
+    //  }, true, "HEADER_JSON", "password", true);
+    //  if (res.code === 0) {
+    //    //存token
+    //    uni.setStorageSync('token', res.data.accessToken);
+    //    getLoginInfo();
+    //    getMenu();
+    //  } else {
+    //    uni.showToast({title: res.msg, icon: 'none'});
+    //  }
    }
 
    // 获取用户信息

@@ -34,7 +34,7 @@ import {ref, reactive, watchEffect, getCurrentInstance, defineEmits } from "vue"
 let emits = defineEmits(['changeTab']);
 
 const list = ref([
-  { name: '关注',  code: 0, },
+  { name: '关注', code: 0, },
   { name: '发现', code: 1, },
 ])
 let currentIndex = ref(0)

@@ -110,6 +110,42 @@ let http = {
         });
     },
     /**
+     * delete方法
+     * @param {String} url [请求的url地址]
+     * @param {Object} param[请求携带的参数]
+     * @param {Boolean} loading[请求弹窗]
+     * @param {String} type[请求头content-type参数]
+     * @param {String} grant_type[请求头grant_type参数]
+     * @param {Boolean} login[是否登录存入请求头]
+     **/
+    delete: function (url, param, loading = true, type = 'HEADER_XWWW', grant_type = '', login = false) {
+        if (loading) this.initload();
+		let header = this.handleHeader(type, grant_type, login)
+        if (!url) return 0;
+        return new Promise(
+            function (resolve, reject) {
+                uni.request({
+                    url: url,
+                    data: param || {},
+                    header: header,
+                    method: "DELETE",
+                    success: (res) => {
+                        uni.hideLoading();
+                        httpServe(resolve, res)
+                    },
+                    fail: (err) => {
+                        uni.hideLoading();
+                        uni.showToast({
+                            title: '网络错误',
+                            duration: 2000
+                        });
+                        reject(err);
+                    }
+                });
+            }
+        )
+    }, 
+    /**
      * post方法，
      * @param {String} url [请求的url地址]
      * @param {Object} param[请求携带的参数]
@@ -188,6 +224,13 @@ let http = {
     asyncGet: function (url, param, loading,type = 'HEADER_JSON', grant_type = '', login = false) {
         return new Promise((resolve, reject) => {
             this.get(url, param, loading,type, grant_type, login).then(res => {
+                resolve(res);
+            });
+        });
+    },
+    asyncDelete: function (url, param, loading,type = 'HEADER_JSON', grant_type = '', login = false) {
+        return new Promise((resolve, reject) => {
+            this.delete(url, param, loading,type, grant_type, login).then(res => {
                 resolve(res);
             });
         });

@@ -1,7 +1,7 @@
 <template>
   <view class="waterfall-item">
     <view class="waterfall-item__image" :style="[imageStyle(props.item)]" @click="contentInfo">
-      <image :src="item.image" mode="widthFix" :style="{width:item.width+'px'}"></image>
+      <uv-image observeLazyLoad :src="item.image" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
     </view>
     <view class="waterfall-item__ft">
       <view class="waterfall-item__ft__desc uv-line-2" @click="contentInfo">

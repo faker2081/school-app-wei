@@ -2,7 +2,7 @@
   <view>
     <view class="header-1">
       <uv-tabs
-        :list="list"
+        :list="tabList"
         lineWidth="0"
         lineColor="#f56c6c"
         :activeStyle="{
@@ -33,10 +33,21 @@ import {ref, reactive, watchEffect, getCurrentInstance, defineEmits } from "vue"
 
 let emits = defineEmits(['changeTab']);
 
-const list = ref([
-  { name: '关注', code: 0, },
-  { name: '发现', code: 1, },
-])
+let props = defineProps({
+  tabList: {
+    type: Array,
+    default: [{name: "关注", code: 0}, {name: "发现", code: 1}],
+  },
+  selectList: {
+    type: Array,
+    default: [],
+  },
+});
+// tabs 列表
+const tabList = ref(props.tabList)
+// 选项列表
+const selectList = ref(props.selectList)
+
 let currentIndex = ref(0)
 // 切换标签
 const changeTab = (item) => {

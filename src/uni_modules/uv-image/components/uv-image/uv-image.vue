@@ -23,6 +23,7 @@
 				:lazy-load="lazyLoad"
 				class="uv-image__image"
 				:style="[imageStyle]"
+				:webp="webp"
 			></image>
 			<view
 				v-if="showLoading && loading"
@@ -180,7 +181,9 @@
 		},
 		mounted() {
 			this.show = true;
-			if(this.observeLazyLoad) this.observerFn();
+			this.$nextTick(()=>{
+				if(this.observeLazyLoad) this.observerFn();
+			})
 		},
 		methods: {
 			// 点击图片

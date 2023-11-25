@@ -37,7 +37,6 @@ const props = defineProps({
   },
 })
 
-
 // 切换标签
 const changeTab = (item) => {
   console.log(item)

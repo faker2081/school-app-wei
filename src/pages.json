@@ -63,27 +63,26 @@
 		}
 
 	],
+	"preloadRule": {
+		"pages/schoolForum/index/index": {
+			"network": "all",
+			"packages": ["pages/schoolForum/"]
+		}
+	},
 	"tabBar": {
 		"color": "#7a7e83",
-		"selectedColor": "#1677ff",
+		"selectedColor": "#EC808D",
 		"backgroundColor": "#ffffff",
 		"list": [
 			{
-				"pagePath": "pages/index/schoolIndex",
-				"text": "首页"
+				// "pagePath": "pages/schoolForum/index/index",
+				// "text": "首页"
 			},
-			{
-				"pagePath": "pages/index/purchaseIndex",
-				"text": "首页"
-			},
-			{
-				"pagePath": "pages/application/applicationCenter",
-				"text": "工作台"
-			},
-			{
-				"pagePath": "pages/user/userInfo",
-				"text": "我的"
-			}
+			{},
+			{},
+			{},
+			{}
+
 		]
 	},
 	"globalStyle": {

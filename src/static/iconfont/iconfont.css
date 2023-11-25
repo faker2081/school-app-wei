@@ -1,19 +1,42 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 4266860 */
+  font-family: "iconfont"; /* 设置字体名 */
   src: 
+   /* *
+    * 字体文件的位置，如果你的字体文件和CSS相对位置发生改变，应该同步修正，format 用于指定字体文件的格式
+    * src 可添加多个字体文件，这是为了保证兼容性。CSS 解析是从上往下解析的，如果前面的字体文件不被浏览器
+    * 支持，就会往下解析另一个字体文件，直至找到可用的字体文件。
+    * 写法如下：
+    * src: url('iconfont.eot?#iefix') format('embedded-opentype'),
+    *      url('iconfont.woff') format('woff'),
+    *      url('iconfont.ttf') format('truetype'),
+    *      url('iconfont.svg#defineName') format('svg');
+   */
        url('data:application/x-font-woff2;charset=utf-8;base64,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') format('woff2'),
        url('iconfont.woff?t=1697183775461') format('woff'),
        url('iconfont.ttf?t=1697183775461') format('truetype');
 }
 
+/*
+ * 字体的启用
+ * 当标签含有类 iconfont 时，强制使用 iconfont 字体 
+ */
 .iconfont {
+  /*
+   * font-family 用于声明使用 iconfont 字体，font-family 的值必须与 @font-face 属性 font-family 的值保持一致。如果对其中一
+   * 个改动了另一个也要一并修改。一般的，不建议修改 
+   */
   font-family: "iconfont" !important;
   font-size: 16px;
   font-style: normal;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased; /* 字体锯齿优化属性，详见：https://www.jianshu.com/p/6f022c65775f */
   -moz-osx-font-smoothing: grayscale;
 }
-
+/*
+ * 字体图标的启用
+ * content 用于声明，要使用 iconfont 字体中，编码为 \ef67 的字形glyph（字体图标）。iconfont 字体中的字体图标编码可以再 iconfont.json 中查询。
+ * 类名可以改变，不过不建议修改。因为它是与 iconfont.json 的值以及 Iconfont 网站中的图标名保持一致的。修改了将会导致一致性遭到破坏，不
+ * 便于维护
+ */
 .icon-personage:before {
   content: "\e629";
 }
@@ -54,7 +77,7 @@
   content: "\e626";
 }
 
-.icon-yhgl:before {
+.icon-users:before {
   content: "\e618";
 }
 
@@ -82,7 +105,7 @@
   content: "\e61e";
 }
 
-.icon-spsy:before {
+.icon-medal:before {
   content: "\e61f";
 }
 
@@ -94,23 +117,23 @@
   content: "\e615";
 }
 
-.icon-ps:before {
+.icon-bus:before {
   content: "\e616";
 }
 
-.icon-cm:before {
+.icon-purchase:before {
   content: "\e617";
 }
 
-.icon-ddzx:before {
+.icon-page:before {
   content: "\e612";
 }
 
-.icon-plgl:before {
+.icon-window:before {
   content: "\e613";
 }
 
-.icon-dkxd:before {
+.icon-guide:before {
   content: "\e614";
 }
 

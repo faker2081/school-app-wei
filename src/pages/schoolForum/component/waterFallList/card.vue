@@ -1,21 +1,21 @@
 <template>
   <view class="waterfall-item">
-    <view class="waterfall-item__image" :style="[imageStyle(props.item)]" @click="contentInfo">
-      <uv-image observeLazyLoad :src="item.image" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
+    <view class="waterfall-item__image"  @click="contentInfo">
+      <uv-image observeLazyLoad :src="baseUrl + item.postPhotoUrl" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
     </view>
     <view class="waterfall-item__ft">
       <view class="waterfall-item__ft__desc uv-line-2" @click="contentInfo">
-        <text class="value">{{item.desc}}</text>
+        <text class="value">{{item.postText}}</text>
       </view>
       <view class="waterfall-item__ft__btn">
         <view class="waterfall-item__ft__btn__avatar" @click="createrInfo">
           <!-- TODO: 头像路径 -->
-          <uv-avatar src="https://via.placeholder.com/200x200.png/2878ff"></uv-avatar>
-          <text class="name">{{ item.name }}</text>
+          <uv-avatar size="30" :src="baseUrl + item.userPhotoUrl"></uv-avatar>
+          <view class="name">{{ item.userName }}</view>
         </view>
         <view class="waterfall-item__ft__btn__like" @click="like">
-          <uv-icon name="thumb-up"></uv-icon>
-          <text class="value">{{ item.like }}</text>
+          <uv-icon size="28" name="thumb-up"></uv-icon>
+          <text class="value">{{ item.likeNum }}</text>
         </view>
       </view>
     </view>
@@ -23,7 +23,10 @@
 </template>
 <script setup>
 import { ref } from 'vue'
+import baseUrl from '@/api/env.js'
 
+
+console.info(baseUrl)
 let props = defineProps({
   item: {
     type: Object,
@@ -96,6 +99,46 @@ $show-lines: 1;
   }
   &__btn {
     padding: 10px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-content: space-around;
+    align-items: center;
+    &__avatar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-content: space-around;
+      align-items: center;
+      .name {
+        font-size: 14px;
+        color: #303133;
+        width: 110rpx;
+        overflow: hidden;
+        text-overflow:ellipsis!important;
+        white-space:nowrap
+      }
+    }
+    &__like {
+      font-size: 14px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-content: space-around;
+      align-items: center;
+      .value  {
+        font-size: 14px;
+        color: #303133;
+        width: 80rpx;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap
+      }
+    }
   }
 }
+
 </style>

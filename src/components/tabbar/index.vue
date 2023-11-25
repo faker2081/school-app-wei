@@ -47,6 +47,8 @@
 import {ref, getCurrentInstance} from "vue";
 import config from '@/common/config'
 
+const value = ref(0)
+
 let projectType = ref('');
 projectType.value = config.PROJECT_TYPE;      // 默认系统登录名称
 
@@ -57,11 +59,14 @@ const props = defineProps({
   },
 })
 
+let change = name => {
+  value.value = name;
+}
 // 权限功能
 // const {proxy} = getCurrentInstance();
 
 // const {tabbar} = proxy.store();
-let change = name => {
+let change1 = name => {
   // tabbar.$patch(state => {
   //   state.name = name;
   //   if(props.type) {

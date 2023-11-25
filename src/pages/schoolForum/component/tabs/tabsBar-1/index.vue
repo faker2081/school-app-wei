@@ -25,7 +25,6 @@
       </view>
     </view>
   </view>
-  
 </template>
 
 <script setup>
@@ -71,11 +70,11 @@ const localPlace = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 30px 15px;
+  padding-top: 20px;
+  margin: 10px 1px;
   justify-content: flex-start;
   .header-1__tile{
     height: 2.5vh;
-    display: flex;
     text-align: center;
     padding-left: 15px;
     padding-right: 15px;

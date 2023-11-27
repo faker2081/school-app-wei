@@ -22,7 +22,6 @@ import {pathToBase64} from 'image-tools';
 import { v4 as uuidv4 } from 'uuid';
 import {ref,reactive, getCurrentInstance, defineEmits} from 'vue'
 const {proxy} = getCurrentInstance()
-import api from '@/api/upload/upload'
 
 const props = defineProps({
   tableId: {    // 表id
@@ -108,8 +107,6 @@ let init = async (e) => {
   }
 }
 
-init();
-
 
 // 删除图片
 let fileDelete = (e, key) => {
@@ -155,24 +152,24 @@ const afterRead = async (event) => {
     }
     const imgString = await pathToBase64(lists[i].url);
     oParams.base64 = imgString;
-    const res = await proxy.http.upload(api.fileUpload, oParams, true, '', '', false);
-    console.info(JSON.stringify(res));
-    const resdata = JSON.parse(res);
-    if(resdata.code === 0) {
-      let oItem = {
-        fileId: resdata.data.fileId,
-        url: resdata.data.path,
-        type: props.type,
-        name: resdata.data.name,
-        extname: '',
-        filePath: resdata.data.filePath,
-        fileType: resdata.data.fileType,
-        fileSize: resdata.data.fileSize,
-        uuid: uuidv4()
-      }
-      imageList.value.push(oItem);
-      emits('imageListArray',imageList.value,oItem)
-    }
+    // const res = await proxy.http.upload(api.fileUpload, oParams, true, '', '', false);
+    console.info(oParams);
+    // const resdata = JSON.parse(res);
+    // if(resdata.code === 0) {
+    //   let oItem = {
+    //     fileId: resdata.data.fileId,
+    //     url: resdata.data.path,
+    //     type: props.type,
+    //     name: resdata.data.name,
+    //     extname: '',
+    //     filePath: resdata.data.filePath,
+    //     fileType: resdata.data.fileType,
+    //     fileSize: resdata.data.fileSize,
+    //     uuid: uuidv4()
+    //   }
+    //   imageList.value.push(oItem);
+    //   emits('imageListArray',imageList.value,oItem)
+    // }
   }
 };
 

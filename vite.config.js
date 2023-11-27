@@ -45,23 +45,31 @@ export default defineConfig({
   },
   //本地运行配置，以及反向代理配置
   server: {
-    host: true,
-    https: false,//是否启用 http 2
-    cors: true,//为开发服务器配置 CORS , 默认启用并允许任何源
-    open: true,//服务启动时自动在浏览器中打开应用
-    port: "8080",
-    strictPort: false, //设为true时端口被占用则直接退出，不会尝试下一个可用端口
-    hmr: false,//禁用或配置 HMR 连接
+    // host: true,
+    // https: false,//是否启用 http 2
+    // cors: true,//为开发服务器配置 CORS , 默认启用并允许任何源
+    // open: true,//服务启动时自动在浏览器中打开应用
+    // port: "8080",
+    // strictPort: false, //设为true时端口被占用则直接退出，不会尝试下一个可用端口
+    // hmr: false,//禁用或配置 HMR 连接
 
     // 反向代理配置
-    // proxy:'http://192.168.0.172:8080',
+    // proxy:'http://159.75.201.124:8060',
     // proxy: {
     //   '/api': {
-    //     target: "https://xxxx.com/",
+    //     target: "http://159.75.201.124/",
     //     changeOrigin: true,
     //     rewrite: (path) => path.replace(/^\/api/, '')
     //   }
     // }
+    port: 8080,
+		proxy: {
+			'/api': {
+				target: 'http://159.75.201.124:8060', // 目标服务  
+				changeOrigin: true,
+				rewrite: path => path.replace(/^\/api/, ''),
+			}
+    }
   },
   //打包配置
   build: {

@@ -2,29 +2,35 @@
   <view class="container">
     <view style="height: 89vh;">
       <view class="nav-bar">
-        <h3 class="font-title"><span class="top-title">欢迎来到，</span><br/><span class="top-title-end">AI智能监控服务中心</span></h3>
+        <h3 class="font-title"><span class="top-title">欢迎来到，</span><br/><span class="top-title-end">微校园</span></h3>
       </view>
       <view class="nav-bar">
         <view class="banner">
-          <view class="input-view" :class="form.loginName ? 'uni-input' : 'uni-input-grey'">
-            <input class="input-left" focus v-model="form.loginName" placeholder="请输入用户名"/>
-            <text v-if="form.loginName" class="icon-close" @click="close(2)"></text>
+          <view class="input-view"  :class="formData.telephone ? 'uni-input' : 'uni-input-grey'">
+            <uv-form :model="formData" ref="form" :rules="rule" errorType="message">
+              <uv-form-item prop="telephone">
+                <input class="input-left" maxlength="11" minlength="11" type="tel" focus v-model="formData.telephone" placeholder="请输入电话号码"/>
+              </uv-form-item>
+              
+            </uv-form>
+            
           </view>
-          <view class="input-view" style="margin-top:10px;" :class="form.loginPwd ? 'uni-input' : 'uni-input-grey'">
+          <!-- <view class="input-view" style="margin-top:10px;" :class="form.loginPwd ? 'uni-input' : 'uni-input-grey'">
             <input class="input-left" password v-model="form.loginPwd" placeholder="请输入密码"/>
             <text v-if="form.loginPwd" class="icon-close" @click="close(3)"></text>
-          </view>
+          </view> -->
           <view class="button-view">
-            <uv-button class="button" @click="accountLogin">登录</uv-button>
+            <uv-button class="button" @click="accountLogin">一键登录</uv-button>
+            <uv-button class="button" @click="accountRegister">一键注册</uv-button>
           </view>
           <view>
             <view class="forget" @click="forgotPassword">忘记密码</view>
           </view>
         </view>
       </view>
-      <view class="phone-button-view">
+      <!-- <view class="phone-button-view">
         <uv-button class="phone-login-button" @click="changeLoginPage">验证码登录</uv-button>
-      </view>
+      </view> -->
     </view>
   </view>
 </template>
@@ -37,34 +43,58 @@
 
    const {proxy} = getCurrentInstance();
 
-   const form = reactive({
+   const formData = reactive({
      loginName: '',
-     loginPwd: ''
+     loginPwd: '',
+     telephone: '',
    });
 
+   const rule = reactive({
+    telephone: [{
+      type: 'string',
+      required: true,
+      message: '请输入手机号码',
+      trigger: ['blur', 'change']
+    },
+    {
+      validator: (rule, value, callback) => {
+        return proxy.validate.validatePhone(value)
+      },
+      message: '请输入正确手机号码',
+      trigger: ['blur', 'change']
+    }],
+  })
+
+  const form = ref(null)
    // 账号登录
    let accountLogin = async (e) => {
-    uni.navigateTo({
-      url: '/pages/schoolForum/index/index'
-    });
-    //  if (!form.loginName || !form.loginPwd) {
-    //    uni.showToast({title: '用户名或密码不能为空', icon: 'none'});
-    //    return;
-    //  }
-    //  let res = await proxy.http.asyncPost(api.accountLogin, {
-    //    username: form.loginName.trim(),
-    //    password: getAES(form.loginPwd),
-    //    grant_type: 'password',
-    //  }, true, "HEADER_JSON", "password", true);
-    //  if (res.code === 0) {
-    //    //存token
-    //    uni.setStorageSync('token', res.data.accessToken);
-    //    getLoginInfo();
-    //    getMenu();
-    //  } else {
-    //    uni.showToast({title: res.msg, icon: 'none'});
-    //  }
+    form.value.validate().then(async(valid) => {
+      console.info(valid)
+      let res = await proxy.http.asyncGet(api.login(formData.telephone), {}, "HEADER_JSON");
+      console.info(res)
+      if (res.code === 200) {
+        //存用户信息
+        uni.setStorageSync('userInfo', res.data);
+        uni.navigateTo({
+          url: '/pages/schoolForum/index/index'
+        });
+        //  getLoginInfo();
+        //  getMenu();
+      } else {
+        uni.showToast({title: res.msg, icon: 'none'});
+      }
+    })
+     
    }
+
+let accountRegister = async (e) => {
+    form.value.validate().then(async(valid) => {
+      console.info(valid)
+      let res = await proxy.http.asyncGet(api.register(formData.telephone), {}, "HEADER_JSON");
+      console.info(res)
+      uni.showToast({title: res.msg, icon: 'none'});
+    })
+}
 
    // 获取用户信息
    let getLoginInfo = async (e) => {

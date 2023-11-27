@@ -73,6 +73,7 @@ let http = {
                 headers['Authorization'] = '';
             }
         }
+        headers['withCredentials'] = false;
         return headers;
     },
     /**
@@ -88,6 +89,7 @@ let http = {
         if (loading) this.initload(); // loading加载中
 		let header = this.handleHeader(type, grant_type, login)
         if (!url) return 0; // url为空关闭函数
+        console.log(url)
         return new Promise(function (resolve, reject) {
             uni.request({
                 url: url,

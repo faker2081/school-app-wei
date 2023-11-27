@@ -15,7 +15,7 @@
 import tabsBar1 from '../component/tabs/tabsBar-1/index';
 import tabsBar2 from '../component/tabs/tabsBar-2/index';
 import waterFallList from '../component/waterFallList/index';
-import { ref, getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance, reactive } from 'vue'
 
 const proxy = getCurrentInstance().proxy;
 const list = ref([

@@ -15,6 +15,18 @@
 					"style": {
 						"navigationStyle": "custom"
 					}
+				},
+				{
+					"path": "/search/index",
+					"style": {
+							"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "/search/result",
+					"style": {
+							"navigationStyle": "custom"
+					}
 				}
 			],
 			"name": "schoolForum"

@@ -7,7 +7,7 @@
     <view class="content-box scroll-box">
       <waterFallList class="flex" ref="waterFallListRef" ></waterFallList>
     </view>
-    <Tabbar type="home"></Tabbar>
+    <Tabbar  type="home"></Tabbar>
   </view>
 </template>
 
@@ -16,7 +16,7 @@ import tabsBar1 from '../component/tabs/tabsBar-1/index';
 import tabsBar2 from '../component/tabs/tabsBar-2/index';
 import waterFallList from '../component/waterFallList/index';
 import { ref, getCurrentInstance, reactive } from 'vue'
-import { onLoad, onReady } from '@dcloudio/uni-app';
+import { onLoad, onReady, onShow } from '@dcloudio/uni-app';
 import api from '@/api/post/index';
 import login from '@/api/login/login'
 
@@ -28,7 +28,9 @@ async function init(){
   
 }
 
-
+onShow(() => {
+  uni.hideTabBar()
+})
 
 onReady(() => {
   waterFallListRef.value.queryForm.search.tag = '工作';

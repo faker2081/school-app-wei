@@ -14,6 +14,7 @@ import TopHeight from "@/common/topHeight"
 // 注册公共组件
 import Header from "@/components/header/index.vue";
 import HeaderSearch from "@/components/header/headerSearch.vue";
+import HeaderUser from "@/components/header/headerUser.vue";
 import Tabbar from "@/components/tabbar/index.vue";
 
 
@@ -30,6 +31,7 @@ export function createApp() {
     app.config.globalProperties.cal = cal;
     app.component('Header', Header);
     app.component('HeaderSearch', HeaderSearch);
+    app.component('HeaderUser', HeaderUser);
     app.component('Tabbar', Tabbar);
 
     app.directive('hasPermission', {

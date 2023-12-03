@@ -1,5 +1,5 @@
 <template>
-  <uv-tabbar :value="tabbar.name" @change="change" :fixed="true" activeColor="#EC808D"
+  <uv-tabbar :value="value" @change="change" :fixed="true" activeColor="#EC808D"
              inactiveColor="rgb(0,0,0,.9)">
     <uv-tabbar-item text="首页" name="home">
       <template #inactive-icon>
@@ -58,6 +58,8 @@ const props = defineProps({
   },
 })
 
+let value = ref('');
+value.value = uni.getStorageSync('tabbar');
 // let change = name => {
 //   value.value = name;
 // }
@@ -65,13 +67,7 @@ const props = defineProps({
 const {proxy} = getCurrentInstance();
 const {tabbar} = proxy.store();
 let change = name => {
-  tabbar.$patch(state => {
-    state.name = name;
-    if(props.type) {
-      state.type = props.type;
-    }
-  })
-  
+  uni.setStorageSync('tabbar', name);
   switch (name) {
     case 'home':
       // if (tabbar.type ==='user') { // 权限功能

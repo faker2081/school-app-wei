@@ -5,7 +5,12 @@
   </view>
 </template>
 <script setup>
+import { onShow } from "@dcloudio/uni-app";
 
+
+onShow(() => {
+  uni.hideTabBar()
+})
 </script>
 <style lang="sss" scoped>
 

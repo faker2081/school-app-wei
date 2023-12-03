@@ -58,7 +58,6 @@ let http = {
         }
 
         if(grant_type) {
-            console.log(grant_type)
             headers['grant_type'] = grant_type;
         }
         headers['wx'] = true;
@@ -89,7 +88,6 @@ let http = {
         if (loading) this.initload(); // loading加载中
 		let header = this.handleHeader(type, grant_type, login)
         if (!url) return 0; // url为空关闭函数
-        console.log(url)
         return new Promise(function (resolve, reject) {
             uni.request({
                 url: url,
@@ -158,7 +156,6 @@ let http = {
      **/
     post: function (url, param, loading = true, type = 'HEADER_JSON', grant_type = '', login = false) {
         if (loading) this.initload();
-        console.log(grant_type,login);
 		let header = this.handleHeader(type, grant_type, login)
         if (!url) return 0;
         return new Promise(function (resolve, reject) {

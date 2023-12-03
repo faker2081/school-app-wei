@@ -1,5 +1,5 @@
 <template>
-  <uv-tabbar :value="value" @change="change" :fixed="true" activeColor="#EC808D"
+  <uv-tabbar :value="tabbar.name" @change="change" :fixed="true" activeColor="#EC808D"
              inactiveColor="rgb(0,0,0,.9)">
     <uv-tabbar-item text="首页" name="home">
       <template #inactive-icon>
@@ -47,7 +47,6 @@
 import {ref, getCurrentInstance} from "vue";
 import config from '@/common/config'
 
-const value = ref(0)
 
 let projectType = ref('');
 projectType.value = config.PROJECT_TYPE;      // 默认系统登录名称
@@ -59,24 +58,23 @@ const props = defineProps({
   },
 })
 
+// let change = name => {
+//   value.value = name;
+// }
+
+const {proxy} = getCurrentInstance();
+const {tabbar} = proxy.store();
 let change = name => {
-  value.value = name;
-}
-// 权限功能
-// const {proxy} = getCurrentInstance();
-
-// const {tabbar} = proxy.store();
-let change1 = name => {
-  // tabbar.$patch(state => {
-  //   state.name = name;
-  //   if(props.type) {
-  //     state.type = props.type;
-  //   }
-  // })
-
+  tabbar.$patch(state => {
+    state.name = name;
+    if(props.type) {
+      state.type = props.type;
+    }
+  })
+  
   switch (name) {
     case 'home':
-      // if (tabbar.type ==='user') {
+      // if (tabbar.type ==='user') { // 权限功能
         uni.switchTab({
           url: '/pages/schoolForum/index/index'
         });
@@ -93,9 +91,9 @@ let change1 = name => {
       // });
       break;
     case 'post':
-      // uni.switchTab({
-      //   url: ''
-      // });
+      uni.navigateTo({
+        url: '/pages/schoolForum/sendPost/index'
+      });
       break;
     case 'message':
       // uni.switchTab({
@@ -103,13 +101,14 @@ let change1 = name => {
       // });
       break;
     case 'mine':
-      // uni.switchTab({
-      //   url: ''
-      // });
+      uni.switchTab({
+        url: '/pages/my/my-info'
+      });
       break;
     default:
       break;
   }
+  console.info("value.value = name;", tabbar.name)
 }
 
 </script>

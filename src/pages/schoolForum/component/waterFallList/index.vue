@@ -1,14 +1,14 @@
 <template>
   <scroll-view scroll-y="true" class="list-box"
-    :refresher-enabled="true" :lower-threshold="50" @scrolltolower="nextPage"
-    :refresher-threshold="80" refresher-background="#FFF" @refresherpulling="onPulling"
+    :refresher-enabled="true" :lower-threshold="50" @scrolltolower="nextPage" :refresher-triggered="triggered"
+    :refresher-threshold="80" refresher-background="rgb(244, 244, 244)" @refresherpulling="onPulling"
     @refresherrefresh="onRefresh" @refresherrestore="onRestore" @refresherabort="onAbort">
-    <uv-waterfall ref="waterfall" v-model="list" :add-time="10" @clear="clear" @changeList="changeList"
+    <uv-waterfall  ref="waterfall" v-model="list" :add-time="10" @clear="clear" @changeList="changeList"
       :left-gap="leftGap" :right-gap="rightGap" :column-gap="columnGap">
       <template v-slot:list1>
         <!-- 为了磨平部分平台的BUG，必须套一层view -->
         <view >
-          <view v-for="(item, index) in list1" :key="index">
+          <view v-for="(item, index) in list1" :key="index" class="card-box">
             <card :item="item"> </card>
           </view>
         </view>
@@ -16,21 +16,21 @@
       <template v-slot:list2>
         <!-- 为了磨平部分平台的BUG，必须套一层view -->
         <view >
-          <view v-for="(item, index) in list2" :key="index">
+          <view v-for="(item, index) in list2" :key="index" class="card-box">
             <card :item="item"> </card>
           </view>
         </view>
       </template>
     </uv-waterfall>
 
-    <uv-load-more :status="loadStatus"></uv-load-more>
+    <uv-load-more v-show="!triggered" :status="loadStatus"></uv-load-more>
   </scroll-view>
 </template>
 
 <script setup>
 import {ref, reactive, watchEffect, getCurrentInstance, defineEmits, computed } from "vue";
 import card from '@/pages/schoolForum/component/waterFallList/card';
-import { onHide, onLoad, onShareTimeline } from "@dcloudio/uni-app";
+import { onHide, onLoad, onReady, onShareTimeline } from "@dcloudio/uni-app";
 import api from '@/api/post/index';
 
 let {proxy} = getCurrentInstance();
@@ -61,7 +61,7 @@ const leftGap = 10
 const rightGap = 10
 const columnGap = 10
 
-let prpos = defineProps({
+let props = defineProps({
   list: {
     type: Array,
     default: () => []
@@ -69,7 +69,7 @@ let prpos = defineProps({
 })
 
 // 列表数据
-let list = ref(prpos.list);
+let list = ref(props.list);
 let list1 = ref([]);
 let list2 = ref([]);
 
@@ -89,20 +89,27 @@ const waterfall = ref(null);
 // 下拉刷新数据
 async function onPulling(e) {
   freshing.value = false;
+  waterfall.value.clear();
   setTimeout(() => {
     triggered.value = true;
-  }, 1000);
+  }, 0);
+  console.log('下拉刷新');
 }
-let onRefresh= (e) => {
+let onRefresh= async(e) => {
+  list1.value = [];
+  list2.value = [];
+  list.value = [];
+  
   if (freshing.value) return;
   triggered.value = 'restore';
   setTimeout(() => {
     freshing.value = false;
     triggered.value = false;
+    console.log('刷新完成');
   }, 1000);
   //获取数据的函数
   queryForm.pageNo = 1; // 记录数
-  getData()
+  list.value = await getData()
 };
 
 let onRestore= (e) => {
@@ -126,12 +133,13 @@ function clear() {
   }
 
 // 加载状态
-const loadStatus = ref('loadmore');
+const loadStatus = ref('nomore');
 //触底加载更多
 async function onReachBottom() {
   if(loadStatus.value == 'loadmore') {
     loadStatus.value = 'loading';
-    const { data } = await getData();
+    waterfall.value.clear();
+    const data = await getData();
     list.value.push.apply(list.value,data);
     loadStatus.value = 'loadmore';
   }
@@ -148,23 +156,34 @@ async function switchTab() {
   waterfall.value.clear();
   list1.value = [];
   list2.value = [];
-  const { data } = await getData();
+  const data = await getData();
   list.push.apply(list.value, data);
 }
 
+onLoad(() => {
+  // initList();
+})
+
+onReady(() => {
+  console.log('onReady')
+  // waterfall.value.clear();
+  // initList();
+  // console.log(list.value)
+})
+
 // 如果页面还没渲染结束，页面就跳走，但此时@changeList回调还在返回数据，可能会造成渲染出错，所以要想办法停止渲染 
 onHide(() => {
-  waterfall.value.clear();
+  // waterfall.value.clear();
 })
 
 
 // 获取数据
 async function getData() {
-
-  const res = await proxy.http.asyncPost(api.findPageNoTenantId, queryForm);
+  const res = await proxy.http.asyncPost(api.searchPostByCondition, queryForm);
 
   if (res.code === 200) {
     total.value = res.data.total;
+    console.log(res.data.list)
     return res.data.list;
   }else{
     uni.showToast({
@@ -177,8 +196,9 @@ async function getData() {
 
 // 初始化列表
 async function initList() {
-  list.value = getData();
+  list.value = await getData();
 }
+
 
 defineExpose({
   initList,
@@ -187,3 +207,9 @@ defineExpose({
 })
 
 </script>
+<style scoped lang="scss">
+.card-box {
+  width: 350rpx;
+  margin-bottom: 10rpx;
+}
+</style>

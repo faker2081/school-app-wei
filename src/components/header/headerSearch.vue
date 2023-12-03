@@ -10,9 +10,9 @@
         @leftClick="leftClick"
     >
       <template #center>
-        <uv-search :placeholder="placeholderTitle"  shape="round" v-model="keyword" @search="change" @custom="change"
-                  bgColor="#ffffff"  height="56rpx" box-style="flex:none;" margin="0 90rpx"
-                   :inputStyle="{width:'265rpx'}" :actionStyle="{color:'#3775F6'}"
+        <uv-search :placeholder="placeholderTitle" :clearabled="true"  shape="round" v-model="keyword" @search="change" @custom="change"
+                  bgColor="#ffffff"  height="56rpx"  margin="0 200rpx 0 90rpx"
+                   :inputStyle="{width:'225rpx'}" :actionStyle="{color:'#3775F6'}"
         ></uv-search>
       </template>
     </uv-navbar>
@@ -59,7 +59,9 @@ let leftClick=()=>{
     emits('leftClick')
   }
 }
-keyword.value = props.keywordName;
+watchEffect(()=>{
+  keyword.value = props.keywordName;
+})
 </script>
 <style lang="scss" scoped>
 ::v-deep .uv-navbar__content {

@@ -1,11 +1,12 @@
 <template>
   <view class="waterfall-item">
     <view class="waterfall-item__image"  @click="contentInfo">
-      <uv-image observeLazyLoad :src="baseUrl + item.postPhotoUrl" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
+      <uv-image v-if="item.postPhotoUrl" observeLazyLoad :src="baseUrl + item.postPhotoUrl" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
+      <uv-image v-else src="" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
     </view>
     <view class="waterfall-item__ft">
       <view class="waterfall-item__ft__desc uv-line-2" @click="contentInfo">
-        <text class="value">{{item.postText}}</text>
+        <text class="content-text">{{item.postText}}</text>
       </view>
       <view class="waterfall-item__ft__btn">
         <view class="waterfall-item__ft__btn__avatar" @click="createrInfo">
@@ -88,6 +89,11 @@ $show-lines: 1;
     margin-bottom: 10rpx;
     line-height: 48rpx;
     font-weight: 700;
+    .content-text{
+      font-size: 32rpx;
+      color: #303133;
+      max-height: 10vh;
+    }
     .value {
       font-size: 32rpx;
       color: #303133;
@@ -140,5 +146,6 @@ $show-lines: 1;
     }
   }
 }
+
 
 </style>

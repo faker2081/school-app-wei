@@ -4,17 +4,19 @@ import {
 // main.js
 import App from "./App.vue";
 import Http from '@/utils/http.js'
-import {createPinia} from "pinia";
-import persist from 'pinia-plugin-persistedstate';
-import uvUI from '@/uni_modules/uv-ui-tools'
+import pinia from '@/store'
 import Validate from "@/utils/formValidate";
-import DayJs from 'dayjs'
+import DayJs from 'dayjs';
+import {globalDirective} from '@/utils/directives'
+import cal from '@/utils/cal.js'
 // 计算自定义高度容器流出
-import TopHeight from "@/common/topHeight";
+import TopHeight from "@/common/topHeight"
 // 注册公共组件
 import Header from "@/components/header/index.vue";
 import HeaderSearch from "@/components/header/headerSearch.vue";
 import Tabbar from "@/components/tabbar/index.vue";
+
+
 
 export function createApp() {
     const app = createSSRApp(App);
@@ -22,15 +24,37 @@ export function createApp() {
     app.config.globalProperties.topHeight = TopHeight;
     app.config.globalProperties.validate = Validate;
     app.config.globalProperties.dayjs = DayJs;
-    const pinia = createPinia();
-    pinia.use(persist)
-    app.use(pinia)
-    app.use(uvUI);
+    app.config.globalProperties.store = pinia.store;
+    app.use(pinia.init);
+    app.config.globalProperties.globalDirective = globalDirective;
+    app.config.globalProperties.cal = cal;
     app.component('Header', Header);
     app.component('HeaderSearch', HeaderSearch);
     app.component('Tabbar', Tabbar);
+
+    app.directive('hasPermission', {
+        mounted(el, binding, VNode, prevNode) {
+            const {
+                value
+            } = binding
+            const all_permission = "*:*:*";
+            const permissions = pinia.store().userStore.permissions;
+            console.log(permissions)
+            if (value && value instanceof Array && value.length > 0) {
+                const permissionFlag = value;
+                console.log(value)
+                const hasPermissions = permissions.some(permission => {
+                    return all_permission === permission || permissionFlag.includes(permission)
+                })
+                if (!hasPermissions) {
+                    el.parentNode && el.parentNode.removeChild(el)
+                }
+            } else {
+                throw new Error(`请设置操作权限标签值`)
+            }
+        },
+    })
     return {
         app,
     };
-
 }

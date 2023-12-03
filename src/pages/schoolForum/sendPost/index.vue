@@ -1,10 +1,10 @@
 <template>
   <view class="box-all">
     <view class="header-box">
-      <header title="发布贴子"></header>
+      <Header title="发布贴子"></Header>
     </view>
     <view class="content-box">
-      <uv-form :v-model="formData" ref="form" :rules="rule" errorType="message">
+      <uv-form v-model="formData" ref="form" :rules="rule" errorType="message">
         <uv-form-item borderBottom prop="postTitle">
           <view class="input-view" :class="formData.postTitle? 'uni-input' : 'uni-input-grey'">
             <uv-input border="bottom" v-model="formData.postTitle" placeholder="请输入标题（选填）" maxlength="40"/>
@@ -19,10 +19,11 @@
 </template>
 
 <script setup>
-import {ref, getCurrentInstance, watchEffect} from 'vue'
+import {ref, getCurrentInstance, watchEffect, reactive} from 'vue'
 import post from '@/api/post/index'
 
 const userInfo = uni.getStorageSync('userInfo');
+
 let formData = ref({
   userId: userInfo.id,
   postTitle:"",
@@ -45,3 +46,11 @@ const rule = reactive({
 
 
 </script>
+<style scoped lang="scss">
+.box-all{
+  width: 100vw;
+  height: 100vh;
+
+  background:#F8F9FC;
+}
+</style>

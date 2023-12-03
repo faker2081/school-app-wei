@@ -3,8 +3,8 @@
     <!-- 2.0.19支持autoBack，默认为false -->
     <uv-navbar
         :title="title"
-        :autoBack="true"
         :bg-color="bgColor"
+        :autoBack="autoBack"
         :leftIconSize="leftIconSize"
         :leftIconColor="leftIconColor"
         :titleStyle="{fontWeight: 600,fontSize:'36rpx'}"
@@ -14,12 +14,13 @@
   </view>
 </template>
 <script setup>
-import {ref, getCurrentInstance, watchEffect} from 'vue'
+import {defineEmits, watchEffect} from 'vue'
+let emits = defineEmits(['leftClick']);
 const props = defineProps({
   // 标题
   title:{
     type:String,
-    default:"123"
+    default:""
   },
   // 背景色
   bgColor:{
@@ -34,10 +35,16 @@ const props = defineProps({
   leftIconColor:{
     type:String,
     default:'#000'
+  },
+  autoBack: {
+    type: Boolean,
+    default: true
   }
 })
 let leftClick=()=>{
-
+  if(!props.autoBack) {
+    emits('leftClick')
+  }
 }
 watchEffect(()=>{
   console.log(props.title);

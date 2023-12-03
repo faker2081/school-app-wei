@@ -11,19 +11,19 @@
 			"root": "pages/schoolForum/",
 			"pages": [
 				{
-					"path": "/index/index",
+					"path": "index/index",
 					"style": {
 						"navigationStyle": "custom"
 					}
 				},
 				{
-					"path": "/search/index",
+					"path": "search/index",
 					"style": {
 							"navigationStyle": "custom"
 					}
 				},
-				{
-					"path": "/search/result",
+				{ // 发帖页面
+					"path": "sendPost/index",
 					"style": {
 							"navigationStyle": "custom"
 					}
@@ -37,6 +37,12 @@
 		// 登录
 		{
 			"path": "pages/login/login",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{ // 我的
+			"path": "pages/my/my-info",
 			"style": {
 				"navigationStyle": "custom"
 			}
@@ -87,13 +93,13 @@
 		"backgroundColor": "#ffffff",
 		"list": [
 			{
-				// "pagePath": "pages/schoolForum/index/index",
-				// "text": "首页"
+				"pagePath": "pages/schoolForum/index/index",
+				"text": "首页"
 			},
-			{},
-			{},
-			{},
-			{}
+			{
+				"pagePath": "pages/my/my-info",
+				"text": "我的"
+			}
 
 		]
 	},

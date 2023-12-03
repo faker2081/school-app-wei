@@ -75,7 +75,7 @@
       if (res.code === 200) {
         //存用户信息
         uni.setStorageSync('userInfo', res.data);
-        uni.navigateTo({
+        uni.switchTab({
           url: '/pages/schoolForum/index/index'
         });
         //  getLoginInfo();

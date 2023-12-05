@@ -1,6 +1,6 @@
 <template>
   <scroll-view scroll-y="true" class="list-box"
-    :refresher-enabled="true" :lower-threshold="50" @scrolltolower="nextPage" :refresher-triggered="triggered"
+    :refresher-enabled="true" lower-threshold="150px" @scrolltolower="nextPage" :refresher-triggered="triggered"
     :refresher-threshold="80" refresher-background="rgb(244, 244, 244)" @refresherpulling="onPulling"
     @refresherrefresh="onRefresh" @refresherrestore="onRestore" @refresherabort="onAbort">
     <uv-waterfall  ref="waterfall" v-model="list" :add-time="10" @clear="clear" @changeList="changeList"
@@ -23,7 +23,7 @@
       </template>
     </uv-waterfall>
 
-    <uv-load-more v-show="!triggered" :status="loadStatus"></uv-load-more>
+    <uv-load-more :status="loadStatus"></uv-load-more>
   </scroll-view>
 </template>
 
@@ -40,7 +40,7 @@ const userInfo = uni.getStorageSync('userInfo');
 // 查询表单
 let queryForm = reactive({
   pageNo: 1, // 页码
-  pageSize: 10,  // 条数
+  pageSize: 6,  // 条数
   search: {
     userId: userInfo.id,
     region: "吉林省;长春市",  // 筛选该地区的帖子，遵循格式
@@ -88,7 +88,7 @@ function changeList(e){
 const waterfall = ref(null);
 // 下拉刷新数据
 async function onPulling(e) {
-  freshing.value = false;
+  freshing.value = true;
   waterfall.value.clear();
   setTimeout(() => {
     triggered.value = true;
@@ -96,11 +96,6 @@ async function onPulling(e) {
   console.log('下拉刷新');
 }
 let onRefresh= async(e) => {
-  list1.value = [];
-  list2.value = [];
-  list.value = [];
-  
-  if (freshing.value) return;
   triggered.value = 'restore';
   setTimeout(() => {
     freshing.value = false;
@@ -110,6 +105,7 @@ let onRefresh= async(e) => {
   //获取数据的函数
   queryForm.pageNo = 1; // 记录数
   list.value = await getData()
+  freshing.value = false;
 };
 
 let onRestore= (e) => {
@@ -121,7 +117,7 @@ let onAbort= (e) => {
 };
 
 let total = ref(0);
-let nextPage= (e) => {
+let nextPage = async(e) => {
   if (queryForm.pageNo * queryForm.pageSize < total.value) {
     queryForm.pageNo++;
     onReachBottom();
@@ -133,20 +129,20 @@ function clear() {
   }
 
 // 加载状态
-const loadStatus = ref('nomore');
+const loadStatus = ref('more');
 //触底加载更多
 async function onReachBottom() {
-  if(loadStatus.value == 'loadmore') {
+  if(loadStatus.value == 'more') {
     loadStatus.value = 'loading';
     waterfall.value.clear();
     const data = await getData();
     list.value.push.apply(list.value,data);
-    loadStatus.value = 'loadmore';
+    loadStatus.value = 'more';
   }
-  if (dataList.value.length < total.value) {
-      loadingType.value = 'loadmore';
+  if (list.value.length < total.value) {
+      loadStatus.value = 'more';
     } else {
-      loadingType.value = 'noMore'; //没有数据时显示‘没有更多’
+      loadStatus.value = 'noMore';
     }
 }
 
@@ -183,6 +179,11 @@ async function getData() {
 
   if (res.code === 200) {
     total.value = res.data.total;
+    if(freshing.value){
+      list1.value = [];
+      list2.value = [];
+      freshing.value = false;
+    }
     console.log(res.data.list)
     return res.data.list;
   }else{
@@ -196,6 +197,7 @@ async function getData() {
 
 // 初始化列表
 async function initList() {
+  waterfall.value.clear();
   list.value = await getData();
 }
 
@@ -203,7 +205,8 @@ async function initList() {
 defineExpose({
   initList,
   switchTab,
-  queryForm
+  queryForm,
+  freshing
 })
 
 </script>

@@ -1,8 +1,8 @@
 <template>
   <view class="waterfall-item">
-    <view class="waterfall-item__image"  @click="contentInfo">
+    <view class="waterfall-item__image"  @click="contentInfo(item)">
       <uv-image v-if="item.postPhotoUrl" observeLazyLoad :src="baseUrl + item.postPhotoUrl" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
-      <uv-image v-else src="" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
+      <!-- <uv-image v-else src="" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image> -->
     </view>
     <view class="waterfall-item__ft">
       <view class="waterfall-item__ft__desc uv-line-2" @click="contentInfo">
@@ -57,9 +57,10 @@ function createrInfo() {
 }
 
 // 获取内容信息
-function contentInfo() {
+function contentInfo(item) {
+  console.log("内容信息item",item)
   uni.navigateTo({
-    //TODO: 跳转到内容信息页面
+    url: '/pages/schoolForum/postInfo/index?item=' + encodeURIComponent(JSON.stringify(item)),
   })
 }
 

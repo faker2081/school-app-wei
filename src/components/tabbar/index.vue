@@ -67,13 +67,14 @@ value.value = uni.getStorageSync('tabbar');
 const {proxy} = getCurrentInstance();
 const {tabbar} = proxy.store();
 let change = name => {
-  uni.setStorageSync('tabbar', name);
+  
   switch (name) {
     case 'home':
       // if (tabbar.type ==='user') { // 权限功能
         uni.switchTab({
           url: '/pages/schoolForum/index/index'
         });
+        uni.setStorageSync('tabbar', name);
       // } 
       // else if (tabbar.type ==='manager') {
       //   uni.switchTab({
@@ -100,6 +101,7 @@ let change = name => {
       uni.switchTab({
         url: '/pages/my/my-info'
       });
+      uni.setStorageSync('tabbar', name);
       break;
     default:
       break;

@@ -1,18 +1,25 @@
 <template>
   <view class="box-all">
     <view class="header-box">
-      <Header title="发布贴子"></Header>
+      <Header title="发布贴子" ></Header>
     </view>
-    <view class="content-box">
-      <uv-form v-model="formData" ref="form" :rules="rule" errorType="message">
-        <uv-form-item borderBottom prop="postTitle">
+    <view class="content-box" :style="{marginTop: topHeight.top + 10 + 'px'}">
+      <uv-form v-model="formData" ref="form" :rules="rule" errorType="message" labelPosition="left">
+        <uv-form-item prop="postTitle" >
           <view class="input-view" :class="formData.postTitle? 'uni-input' : 'uni-input-grey'">
             <uv-input border="bottom" v-model="formData.postTitle" placeholder="请输入标题（选填）" maxlength="40"/>
           </view>
         </uv-form-item>
         <uv-form-item borderBottom prop="postText">
-            <uv-textarea v-model="formData.postText" count placeholder="请输入内容" maxlength="5000" height="120"/>
+            <uv-textarea style="margin: 0px 10px;" v-model="formData.postText" count placeholder="请输入内容" maxlength="5000" height="120"/>
         </uv-form-item>
+        <uv-form-item borderBottom prop="fileList">
+
+        </uv-form-item>
+        <uv-form-item borderBottom prop="tags">
+
+        </uv-form-item>
+        
       </uv-form>
     </view>
   </view>
@@ -51,6 +58,12 @@ const rule = reactive({
   width: 100vw;
   height: 100vh;
 
-  background:#F8F9FC;
+  background:#FFF;
 }
+.input-view{
+  position: fixed;
+  left: 10px;
+}
+
+
 </style>

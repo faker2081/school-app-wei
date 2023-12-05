@@ -1,8 +1,8 @@
 <template>
   <view class="box-all">
     <view class="header-box">
-      <tabsBar1></tabsBar1>
-      <tabsBar2></tabsBar2>
+      <tabsBar1 @changeTab="changeTab1"></tabsBar1>
+      <tabsBar2 v-if="waterFallListRef" @changeTab="changeTab2" @initTab="changeTab2"></tabsBar2>
     </view>
     <view class="content-box scroll-box">
       <waterFallList class="flex" ref="waterFallListRef" ></waterFallList>
@@ -17,25 +17,27 @@ import tabsBar2 from '../component/tabs/tabsBar-2/index';
 import waterFallList from '../component/waterFallList/index';
 import { ref, getCurrentInstance, reactive } from 'vue'
 import { onLoad, onReady, onShow } from '@dcloudio/uni-app';
-import api from '@/api/post/index';
-import login from '@/api/login/login'
 
 const proxy = getCurrentInstance().proxy;
 
-
-const waterFallListRef = ref();
-async function init(){
-  
+// 切換一级标签
+function changeTab1(e) {
+  console.log(e)
+}
+// 切換二级标签
+function changeTab2(e) {
+  console.log(e)
+  waterFallListRef.value.freshing = true;
+  waterFallListRef.value.queryForm.search.tag = e.name;
+  waterFallListRef.value.initList();
 }
 
+const waterFallListRef = ref();
 onShow(() => {
   uni.hideTabBar()
 })
 
 onReady(() => {
-  waterFallListRef.value.queryForm.search.tag = '工作';
-  waterFallListRef.value.initList();
-  init();
 })
 
 

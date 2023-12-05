@@ -28,6 +28,13 @@
 							"navigationStyle": "custom"
 					}
 				}
+				{ // 贴子详情
+					"path": "postInfo/index",
+					"style": {
+							"navigationStyle": "custom"
+					}
+				}
+				
 			],
 			"name": "schoolForum"
 		}

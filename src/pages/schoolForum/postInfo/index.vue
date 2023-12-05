@@ -1,7 +1,7 @@
 <template>
   <view class="box-all">
     <view class="header-box">
-      <header-user :id="props.postId" :userName="postInfo.userName"></header-user>
+      <Header-user v-if="postInfo" :postInfo="postInfo" :userName="postInfo.userName"></Header-user>
     </view>
     <view class="content-box">
       <view class="post-box">
@@ -19,29 +19,30 @@
 <script setup>
 import {ref, getCurrentInstance, watchEffect, reactive} from 'vue'
 import { onLoad, onReady } from '@dcloudio/uni-app'
-import post from '@/api/post/index.js'
+import postApi from '@/api/post/index.js'
 
-// 获取用户信息
-const userInfo = uni.getStorageSync('userInfo');
-const props = defineProps({
-  postId: {
-    type: String,
-    default: ''
+const proxy = getCurrentInstance().proxy;
+
+let postInfo = ref({})
+onLoad((options) => {
+  console.info("headerUser onLoad", options)
+  if(options.item){
+    postInfo.value = JSON.parse(decodeURIComponent(options.item));
   }
 })
 
-const postInfo = reactive({});
-function getPostInfo() {
-  const res = post.getPostDetail(userInfo.id ,props.postId);
+// 获取用户信息
+const userInfo = uni.getStorageSync('userInfo');
+
+const post = reactive({});
+async function getPost() {
+  const res = await proxy.http.asyncGet(postApi.getPostDetail(userInfo.id ,props.id));
   if(res.code === 200){
     Object.assign(postInfo, res.data);
   }
 }
 
 onReady(() => {
-  if(props.postId) {
-    getPostInfo();
-  }
 })
 
 

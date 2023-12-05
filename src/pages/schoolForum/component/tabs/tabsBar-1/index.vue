@@ -23,6 +23,9 @@
       <view class="header-1__tile" style="display: flex;" @click="localPlace">
         <text :class="{choosed: currentIndex === 2}">同城</text> <uv-icon name="arrow-down" style=""></uv-icon>
       </view>
+      <view class="header-1__right" style="display: flex;" @click="search">
+        <text :class="{choosed: currentIndex === 2}">搜索</text> <uv-icon name="search" style=""></uv-icon>
+      </view>
     </view>
   </view>
 </template>
@@ -47,17 +50,26 @@ const tabList = ref(props.tabList)
 // 选项列表
 const selectList = ref(props.selectList)
 
-let currentIndex = ref(0)
+let currentIndex = ref(1)
 // 切换标签
 const changeTab = (item) => {
   console.info("currentIndex", currentIndex.value)
   currentIndex.value = item.code
-  emits('changeTab', item, currentIndex.value);
-  console.log(item)
+  emits('changeTab', item);
 }
 // 切换同城
 const localPlace = () => {
-  currentIndex.value = 2
+  // currentIndex.value = 2
+  uni.showToast({
+    title: '功能待开发',
+    icon: 'error'
+  })
+}
+// 搜索
+function search() {
+  uni.navigateTo({
+    url: '/pages/schoolForum/search/index'
+  })
 }
 </script>
 
@@ -72,7 +84,7 @@ const localPlace = () => {
   justify-content: space-between;
   padding-top: 20px;
   margin: 10px 1px;
-  justify-content: flex-start;
+  justify-content: space-between;
   .header-1__tile{
     height: 2.5vh;
     text-align: center;
@@ -81,10 +93,10 @@ const localPlace = () => {
     color: rgb(96, 98, 102);
   }
   .header-1__right{
-    text-align: center;
+    right: 20px;
     height: 2.5vh;
     display: flex;
-    float: right;
+    padding-right: 10px;
   }
 }
 .choosed {

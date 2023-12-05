@@ -17,6 +17,7 @@
         }"
         itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;"
         @change="changeTab"
+        :current="currentIndex"
       ></uv-tabs>
       <view class="header-1__right" style="display: flex;">
       </view>
@@ -25,25 +26,36 @@
 </template>
 
 <script setup>
+import { onLoad } from '@dcloudio/uni-app';
 import { ref, defineProps } from 'vue'
+
+let emits = defineEmits(['changeTab', "initTab"]);
 
 const props = defineProps({
   list: {
     type: Array,
     default: () => [
-      { name: '热门',  code: '1', },
-      { name: '表白墙', code: '2', },
+      { name: '热门',  code: '0', },
+      { name: '表白墙', code: '1', },
       { name: '工作', code: '2', },
-      { name: '兼职', code: '2', },
+      { name: '兼职', code: '3', },
+      { name: '其他', code: '4', },
     ],
   },
 })
 
-
+let currentIndex = ref(1)
 // 切换标签
 const changeTab = (item) => {
-  console.log(item)
+  emits('changeTab', item);
 }
+function init(){
+  emits('initTab', props.list[currentIndex.value]);
+}
+
+onLoad(() => {
+  init();
+})
 </script>
 
 <style scoped lang="scss">

@@ -5,7 +5,8 @@
     </view>
     <view class="content-box">
       <view class="post-box">
-        TODO 贴子 
+        TODO 贴子
+        
       </view>
       <view class="comment-box">
         <view v-for="item in postInfo.postCommentVoList" :key="item.id">

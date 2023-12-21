@@ -9,6 +9,10 @@ import Validate from "@/utils/formValidate";
 import DayJs from 'dayjs';
 import {globalDirective} from '@/utils/directives'
 import cal from '@/utils/cal.js'
+import ImageUpload from "@/components/imageUpload/index.vue"
+import AreaTree from "@/data/area.js"
+import Tags from "@/data/tages.js"
+
 // 计算自定义高度容器流出
 import TopHeight from "@/common/topHeight"
 // 注册公共组件
@@ -26,6 +30,8 @@ export function createApp() {
     app.config.globalProperties.validate = Validate;
     app.config.globalProperties.dayjs = DayJs;
     app.config.globalProperties.store = pinia.store;
+    app.config.globalProperties.areaTree = AreaTree;
+    app.config.globalProperties.tags = Tags;
     app.use(pinia.init);
     app.config.globalProperties.globalDirective = globalDirective;
     app.config.globalProperties.cal = cal;
@@ -33,6 +39,7 @@ export function createApp() {
     app.component('HeaderSearch', HeaderSearch);
     app.component('HeaderUser', HeaderUser);
     app.component('Tabbar', Tabbar);
+    app.component('ImageUpload', ImageUpload);
 
     app.directive('hasPermission', {
         mounted(el, binding, VNode, prevNode) {

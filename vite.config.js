@@ -65,7 +65,7 @@ export default defineConfig({
     port: 8080,
 		proxy: {
 			'/api': {
-				target: 'http://159.75.201.124:8060', // 目标服务  
+				target: 'http://122.51.38.11:8060', // 目标服务  
 				changeOrigin: true,
 				rewrite: path => path.replace(/^\/api/, ''),
 			}

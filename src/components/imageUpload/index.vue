@@ -12,25 +12,20 @@
       :maxCount="maxCount"
       :deletable="deletable"
       :useBeforeRead="true"
+      :maxSize="maxSize * 1048576"
       @beforeRead="beforeRead"
       @afterRead="afterRead"
       @delete="fileDelete"
   ></uv-upload>
 </template>
 <script setup>
-import {pathToBase64} from 'image-tools';
-import { v4 as uuidv4 } from 'uuid';
-import {ref,reactive, getCurrentInstance, defineEmits} from 'vue'
+import {ref, reactive, getCurrentInstance, defineEmits, watchEffect} from 'vue'
 const {proxy} = getCurrentInstance()
 
 const props = defineProps({
-  tableId: {    // 表id
-    type: String,
-    default: ''
-  },
-  tableName: {      // 表名称
-    type: String,
-    default: ''
+  parentImageList:{
+    type:Array,
+    default:[],
   },
   type: {                 // 文件类型
     type: String,
@@ -66,7 +61,7 @@ const props = defineProps({
   },
   //内部预览图片区域和选择图片按钮的区域宽度，单位rpx，不能是百分比，或者auto
   width:{
-    type:Number||String
+    type:Number||String||Object
   },
   //内部预览图片区域和选择图片按钮的区域高度，单位rpx，不能是百分比，或者auto
   height:{
@@ -76,33 +71,51 @@ const props = defineProps({
   customStyle:{
     type:Object,
   },
-
+  // 是否加水印
+  watermarkFlag:{
+    type:Boolean,
+    default: false
+  },
+  maxSize:{
+    type:Number,
+    default:100
+  }
 })
-let imageList = ref([])
-
-let delList =  ref([])         // 删除文件
-const emits = defineEmits(['imageListArray','imageLength']);
-
-const beforeRead = async (event)=>{
-
-}
-// 初始化数据
-let init = async (e) => {
-  if(props.tableId) {
-    let query = {};
-    query.tableId = props.tableId;
-    query.tableName = props.tableName;
-    query.type = [props.type];
-    let res = await proxy.http.asyncPost(api.findFileList, query);
-    if (res.code === 0) {
-      if(res.data) {
-        res.data.forEach(item => {
-          emits('imageListArray',imageList);
-          imageList.value.push(item);
-        })
-      }
-    } else {
-      uni.showToast({title: res.msg, icon: 'none'});
+let imageList = ref([]);           // 图片列表
+let addList = [];           // 图片新增列表
+let delList =  [];           // 删除文件
+let uploadIf = ref(true)
+const emits = defineEmits(['imageListArray','initImage','delImageListArray']);
+imageList.value = props.parentImageList;
+const beforeRead = async (e)=>{
+  console.log('上', e)
+  const size = (e.file[0].size) / 1024 / 1024
+  let index;
+  let type;
+  // #ifdef H5
+  index = e.file[0].name.indexOf('.')
+  type = e.file[0].name.substring(index + 1)
+  // #endif
+  // #ifdef MP-WEIXIN
+  index = e.file[0].url.indexOf('.')
+  type = e.file[0].url.substring(index + 1)
+  // #endif
+  if (type !== 'png' && type !== 'jpg' && type !== 'jpeg') {
+    uni.showToast({
+      icon:'none',
+      title:'文件格式不正确, 请上传png/jpg/jpeg图片格式文件'
+    })
+    uploadIf.value = false
+    return false
+  }else {
+    if (size > 2) {
+      uni.showToast({
+        icon:'none',
+        title:'上传图片大小不能超过' + maxSize + 'MB'
+      })
+      uploadIf.value = false
+    }else {
+      uploadIf.value = true
     }
   }
 }
@@ -119,22 +132,25 @@ let fileDelete = (e, key) => {
       return item;
     });
     imageList.value.splice(delIndex, 1);
-    delList.value.push(e.file)
-    console.log(delList.value)
-    console.log(delList)
-    emits('delListArray',delList);
-    emits('imageListArray',imageList);
+    delList.push(e.file.id)
+    emits('delImageListArray', delList, imageList.value,props.type);
   } else {
     let delIndex = null;
-    imageList.value.filter((item, index) => {
+    imageList.value.filter((item, index) => {           // 通用列表数据
       if (item.uuid === e.file.uuid) {
         delIndex = index;
       }
-      emits('imageListArray',item)
       return item;
     });
     imageList.value.splice(delIndex, 1);
-    emits('imageListArray',imageList)
+    addList.filter((item, index) => {               // 新增列表数据
+      if (item.uuid === e.file.uuid) {
+        delIndex = index;
+      }
+      return item;
+    });
+    addList.splice(delIndex, 1);
+    emits('imageListArray', addList, imageList.value,props.type)
   }
 }
 
@@ -142,22 +158,12 @@ let fileDelete = (e, key) => {
 const afterRead = async (event) => {
   // 此时可以自行将文件上传至服务器
   let lists = [].concat(event.file);
-  for (let i = 0; i < lists.length; i++) {
-    let oParams = {
-      type: props.type,
-      base64: '',
-      originalFilename: lists[i].name,
-      contentType: '',
-      tableName: props.tableName
-    }
-    const imgString = await pathToBase64(lists[i].url);
-    oParams.base64 = imgString;
-    console.info(oParams);
+  console.log(event)
+  if(uploadIf.value){
+    emits('imageListArray', lists, imageList.value,props.type)
   }
 };
-
-
 </script>
 <style scoped lang="scss">
-
+.form {}
 </style>

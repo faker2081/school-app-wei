@@ -4,7 +4,7 @@
       <Header title="发布贴子" ></Header>
     </view>
     <view class="content-box" :style="{marginTop: topHeight.top + 10 + 'px'}">
-      <uv-form v-model="formData" ref="form" :rules="rule" errorType="message" labelPosition="left">
+      <uv-form v-model="formData" ref="form" :rules="rule" errorType="message" labelPosition="left" labelWidth="auto">
         <uv-form-item prop="postTitle" >
           <view class="input-view" :class="formData.postTitle? 'uni-input' : 'uni-input-grey'">
             <uv-input border="bottom" v-model="formData.postTitle" placeholder="请输入标题（选填）" maxlength="40"/>
@@ -13,22 +13,69 @@
         <uv-form-item borderBottom prop="postText">
             <uv-textarea style="margin: 0px 10px;" v-model="formData.postText" count placeholder="请输入内容" maxlength="5000" height="120"/>
         </uv-form-item>
-        <uv-form-item borderBottom prop="fileList">
-
+        <uv-form-item borderBottom prop="postPhoto">
+          <view class="item-content">
+            <ImageUpload ></ImageUpload>
+          </view>
         </uv-form-item>
         <uv-form-item borderBottom prop="tags">
-
+          <view class="input-view tag-box">
+              <uv-tags :text="areaText" icon="map" plain @click="openAreaPicker"></uv-tags>
+              <uv-tags style="margin-left: 10px;" text="选择标签" type="warning" icon="tags-fill" @click="openTagsPicker"></uv-tags>
+          </view>
         </uv-form-item>
-        
+        <uv-line></uv-line>
+        <view style="width: 98%;">
+          <view style="display:flex; flex-wrap: wrap; flex-direction: row;">
+              <uv-tags style="width: 90px; text-align: center;" v-for="(item, index) in tagList.list" :key="index"  :text="item" type="warning" closable :show="close2" @close="closeTags(index)"></uv-tags>
+          </view>
+        </view>
+        <uv-line></uv-line>
+        <uv-form-item borderBottom prop="tags" label="是否匿名">
+          <view style="width: 20%;">
+            <uv-switch v-model="formData.isPostAnonymous"></uv-switch>
+          </view>
+        </uv-form-item>
       </uv-form>
+    </view>
+
+    <uv-picker ref="picker" :columns="areaList" keyName="name" @change="change" @confirm="confirm">
+		</uv-picker>
+    <!--tages-->
+    <!--多选器-->
+    <uv-popup ref="popup" mode="bottom">
+      <view class="header-title">
+        <!-- <view class="left" @click="handleCancel">取消</view> -->
+        <view class="title">请选择</view>
+        <view class="right" @click="handleOk">确定</view>
+      </view>
+      <view class="popup-content">
+        <view class="all-check">
+          <!-- <uv-checkbox-group v-model="chooseAll"  placement="column" labelSize="32rpx"
+          @change="tagsChangeAll">
+          <uv-checkbox name="all" labelSize="20px"
+                       label="全选"></uv-checkbox>
+          </uv-checkbox-group> -->
+        </view>
+        <uv-checkbox-group v-model="tagList.list" placement="column" labelSize="20px"
+                            @change="tagsChange">
+          <uv-checkbox v-for="(item, index) in tags.tags" :key="index" :name="item.name"
+                       :label="item.name" style="padding: 6px;"></uv-checkbox>
+        </uv-checkbox-group>
+      </view>
+    </uv-popup>
+    <view class="sure-button-box">
+      <button class="sure-button" :disabled="false" @click="onSubmit">发送</button>
     </view>
   </view>
 </template>
 
 <script setup>
-import {ref, getCurrentInstance, watchEffect, reactive} from 'vue'
+import {ref, getCurrentInstance, watchEffect, reactive, computed} from 'vue'
 import post from '@/api/post/index'
+import { onReady } from '@dcloudio/uni-app';
 
+const {proxy} = getCurrentInstance();
 const userInfo = uni.getStorageSync('userInfo');
 
 let formData = ref({
@@ -49,9 +96,96 @@ const rule = reactive({
     message: '请输入标题',
     trigger: ['blur', 'change']
   }],
+  postPhoto: [{
+    type:'array',
+    required: false,
+    message: '请上传图片',
+    trigger: ['blur', 'change']
+  }],
 })
 
+let picker = ref(null);
+// 标签列表
+let tagList = reactive({list: []})
 
+function openAreaPicker() {
+  console.log('打开地区选择器', proxy.areaTree.areaList)
+  picker.value.open();
+}
+// 开启标签选择弹窗
+function openTagsPicker() {
+  popup.value.open();
+}
+const popup = ref(null);
+
+function handleOk() {
+  popup.value.close();
+}
+// 移除标签
+function closeTags(index) {
+  tagList.list.splice(index, 1)
+}
+
+function onSubmit() {
+  
+}
+
+let provinces = ref([]);
+let citys = ref([]);
+let areas = ref([]);
+let pickerValue = ref([0, 0, 0])
+let defaultValue = reactive([3442, 1, 2])
+function getData() {
+  provinces.value = proxy.areaTree.areaList.sort((left, right) => (Number(left.code) > Number(right.code) ? 1 : -1));
+  handlePickValueDefault()
+}
+onReady(() => {
+  getData();
+})
+function handlePickValueDefault() {
+  // 设置省
+  pickerValue.value[0] = provinces.value.findIndex(item => Number(item.id) === defaultValue[0]);
+  // 设置市
+  citys.value = provinces.value[pickerValue.value[0]]?.children || [];
+  pickerValue.value[1] = citys.value.findIndex(item => Number(item.id) === defaultValue[1]);
+  // 设置区
+  areas.value = citys.value[pickerValue.value[1]]?.children || [];
+  pickerValue.value[2] = areas.value.findIndex(item => Number(item.id) === defaultValue[2]);
+  console.info('pickerValue', pickerValue.value)
+  // 重置下位置
+  picker.value.setIndexs([pickerValue.value[0], pickerValue.value[1], pickerValue.value[2]],true);
+}
+
+function change(e) {
+  const { columnIndex, index, indexs } = e
+  // 改变了省
+  if (columnIndex === 0) {
+    citys.value = provinces.value[index]?.children || []
+    areas.value = citys.value[0]?.children || []
+    picker.value.setIndexs([index, 0, 0],true)
+  } else if (columnIndex === 1) {
+    areas.value = citys.value[index]?.children || []
+    picker.value.setIndexs(indexs,true)
+  }
+}
+function open() {
+  picker.value.open();
+  this.handlePickValueDefault()
+}
+const areaText = ref('选择地区')
+function confirm(e) {
+  console.log('确认选择的地区：', e);
+  uni.showToast({
+    icon: 'none',
+    title: `${e.value[0].name}/${e.value[1].name}/${e.value[2].name}`
+  })
+  // 保存地区的时候用 ; 分割
+  areaText.value = `${e.value[0].name}/${e.value[1].name}/${e.value[2].name}`
+}
+
+const areaList = computed(() => {
+  return [provinces.value, citys.value, areas.value];
+})
 </script>
 <style scoped lang="scss">
 .box-all{
@@ -65,5 +199,46 @@ const rule = reactive({
   left: 10px;
 }
 
+.tag-box{
+  display: flex;
+}
+.item-content{
+  width: 90%;
+}
+.content-box{
+  padding: 0px 10px;
+}
 
+
+.header-title {
+  height: 112rpx;
+  font-size: var(--uni-font-size-16);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #E7E7E7;
+  align-items: center;
+  padding: 0 24rpx;
+  .title {
+    flex: 1;
+    text-align: center;
+  }
+
+}
+
+.popup-content {
+  margin: 20rpx 24rpx;
+  overflow: auto;
+  height: 60vh;
+}
+.all-check {
+  display: flex;
+  align-items: center;
+}
+
+
+.view-text-align{
+  text-align: right;
+  color: var(--uni-text-input-color);
+}
 </style>

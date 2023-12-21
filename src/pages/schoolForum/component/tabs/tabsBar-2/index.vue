@@ -1,9 +1,10 @@
 <template>
   <view>
-    <view class="header-1">
+    <view class="header-1" style="overflow-x: auto;">
       <uv-tabs
+        :scrollable="true"
         :list="props.list"
-        lineWidth="0"
+        
         lineColor="#f56c6c"
         :activeStyle="{
           color: '#EC808D',
@@ -28,19 +29,14 @@
 <script setup>
 import { onLoad } from '@dcloudio/uni-app';
 import { ref, defineProps } from 'vue'
+import tages from '../../../../../data/tages';
 
 let emits = defineEmits(['changeTab', "initTab"]);
 
 const props = defineProps({
   list: {
     type: Array,
-    default: () => [
-      { name: '热门',  code: '0', },
-      { name: '表白墙', code: '1', },
-      { name: '工作', code: '2', },
-      { name: '兼职', code: '3', },
-      { name: '其他', code: '4', },
-    ],
+    default: () => tages.tags,
   },
 })
 

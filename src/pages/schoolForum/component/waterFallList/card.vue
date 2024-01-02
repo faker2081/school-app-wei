@@ -10,12 +10,12 @@
       </view>
       <view class="waterfall-item__ft__btn">
         <view class="waterfall-item__ft__btn__avatar" @click="createrInfo">
-          <!-- TODO: 头像路径 -->
           <uv-avatar size="30" :src="baseUrl + item.userPhotoUrl"></uv-avatar>
           <view class="name">{{ item.userName }}</view>
         </view>
         <view class="waterfall-item__ft__btn__like" @click="like">
-          <uv-icon size="28" name="thumb-up"></uv-icon>
+          <uv-icon v-if="item.isUserLikePost" color="#F53F3F" size="28" name="thumb-up-fill"></uv-icon>
+          <uv-icon v-else size="28" name="thumb-up"></uv-icon>
           <text class="value">{{ item.likeNum }}</text>
         </view>
       </view>
@@ -63,15 +63,30 @@ function contentInfo(item) {
     url: '/pages/schoolForum/postInfo/index?item=' + encodeURIComponent(JSON.stringify(item)),
   })
 }
-
+const userInfo = uni.getStorageSync("userInfo")
 // 点赞
 function like() {
-  // TODO: 点赞接口
-  uni.showToast({
-    title: '点赞成功',
-    icon:'success',
-    duration: 1000
-  })
+  if(props.item.isUserLikePost){
+    props.item.likeNum -= 1;
+    props.item.isUserLikePost = false;
+    console.info(userInfo)
+    let res = proxy.http.asyncGet(postApi.cancelLike(userInfo.id, props.item.id));
+    if(res.code == 200){
+      console.info('取消点赞成功')
+    }else{
+      console.info('取消点赞失败')
+    }
+  }else{
+    props.item.likeNum += 1;
+    props.item.isUserLikePost = true;
+    console.info(userInfo)
+    let res = proxy.http.asyncGet(postApi.like(userInfo.id, props.item.id));
+    if(res.code == 200){
+      console.info('点赞成功')
+    }else{
+      console.info('点赞失败')
+    }
+  }
 }
 
 </script>

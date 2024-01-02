@@ -6,16 +6,16 @@
     <view class="content-box" :style="{marginTop: topHeight.top + 10 + 'px'}">
       <uv-form v-model="formData" ref="form" :rules="rule" errorType="message" labelPosition="left" labelWidth="auto">
         <uv-form-item prop="postTitle" >
-          <view class="input-view" :class="formData.postTitle? 'uni-input' : 'uni-input-grey'">
+          <view class="input-view">
             <uv-input border="bottom" v-model="formData.postTitle" placeholder="请输入标题（选填）" maxlength="40"/>
           </view>
         </uv-form-item>
         <uv-form-item borderBottom prop="postText">
-            <uv-textarea style="margin: 0px 10px;" v-model="formData.postText" count placeholder="请输入内容" maxlength="5000" height="120"/>
+            <uv-textarea style="margin: 0px 10px;" v-model="formData.postText" count placeholder="请输入内容" maxlength="4000" height="120"/>
         </uv-form-item>
         <uv-form-item borderBottom prop="postPhoto">
           <view class="item-content">
-            <ImageUpload ></ImageUpload>
+            <ImageUpload @imageListArray="imageListArray"></ImageUpload>
           </view>
         </uv-form-item>
         <uv-form-item borderBottom prop="tags">
@@ -37,6 +37,7 @@
           </view>
         </uv-form-item>
       </uv-form>
+      
     </view>
 
     <uv-picker ref="picker" :columns="areaList" keyName="name" @change="change" @confirm="confirm">
@@ -45,17 +46,11 @@
     <!--多选器-->
     <uv-popup ref="popup" mode="bottom">
       <view class="header-title">
-        <!-- <view class="left" @click="handleCancel">取消</view> -->
         <view class="title">请选择</view>
         <view class="right" @click="handleOk">确定</view>
       </view>
       <view class="popup-content">
         <view class="all-check">
-          <!-- <uv-checkbox-group v-model="chooseAll"  placement="column" labelSize="32rpx"
-          @change="tagsChangeAll">
-          <uv-checkbox name="all" labelSize="20px"
-                       label="全选"></uv-checkbox>
-          </uv-checkbox-group> -->
         </view>
         <uv-checkbox-group v-model="tagList.list" placement="column" labelSize="20px"
                             @change="tagsChange">
@@ -86,7 +81,7 @@ let formData = ref({
   school: userInfo.university,
   region: userInfo.region,
   isPostAnonymous: 0, // 是否匿名（0代表不匿，1代表匿名）
-  postPhoto: [], //可以上传多张，限制：至少一张
+  // postPhoto: [], //可以上传多张，限制：至少一张
 })
 
 const rule = reactive({
@@ -96,6 +91,7 @@ const rule = reactive({
     message: '请输入标题',
     trigger: ['blur', 'change']
   }],
+
   postPhoto: [{
     type:'array',
     required: false,
@@ -103,6 +99,14 @@ const rule = reactive({
     trigger: ['blur', 'change']
   }],
 })
+
+// 图片列表
+let imgList  = ref([]);
+function imageListArray(lists, fileList, type){
+  console.log("lists", lists)
+  console.log("fileList", fileList)
+  imgList.value = lists;
+}
 
 let picker = ref(null);
 // 标签列表
@@ -126,7 +130,104 @@ function closeTags(index) {
   tagList.list.splice(index, 1)
 }
 
-function onSubmit() {
+// 整理数据
+async function formateData() {
+  // 标签数据处理
+  if(tagList.list.length > 0){
+    formData.value.tags = tagList.list.join(';')
+  }else{
+    formData.value.tags = "其他"
+  }
+  // 地区数据
+  if(areaText.value == "选择地区"){
+    formData.value.region = userInfo.region;
+  }else{
+    formData.value.region = areaText.value.replaceAll('/', ';');
+  }
+  console.info("formData123", formData.value)
+  if(formData.value.isPostAnonymous){
+    formData.value.isPostAnonymous = 1;
+  }else{
+    formData.value.isPostAnonymous = 0;
+  }
+  return true;
+}
+// 公共添加文件信息
+async function pushFileList() {
+    let fileList = []
+    imgList.value.forEach(async item => {
+        // 加载blob文件
+        const imgBlob = await fetch(item.url).then(r => r.blob())
+        // 循环生成file文件流
+        fileList.push({
+            url: item.url,
+            info: new File([imgBlob], item.file.name, {
+                type: item.file.type
+            })
+        })
+    })
+    return fileList
+}
+async function toFormData(formDataObject) {
+  if (!formDataObject || typeof formDataObject !== 'object') {
+    throw new Error('Invalid formDataObject provided to toFormData function');
+  }
+  
+  const data = new FormData();
+  Object.keys(formDataObject).forEach((key) => {
+    const value = formDataObject[key];
+    // 如果值是一个对象，并且不是文件，我们可能需要将它转换为 JSON 字符串
+    if (typeof value === 'object' && !(value instanceof File)) {
+      data.append(key, JSON.stringify(value));
+    } else {
+      // 对于文件和其他非对象类型，直接追加
+      data.append(key, value);
+    }
+  });
+  imgList.value.forEach((file, index) => {
+    data.append(`postPhoto[${index}]`, file, file.name);
+  });
+  // 如果你需要在这里进行其他异步操作，可以使用await
+  
+  console.log("FormData has been prepared.");
+  // 注意：由于FormData对象不易于直接查看其内容，console.log(data)可能不会给出你期望的输出
+  return data;
+}
+// 发送贴子 
+async function onSubmit() {
+  const formedFlag = await formateData();
+  if(formedFlag){
+    proxy.http.upload(post.send, formData.value, imgList.value[0] ? imgList.value[0].url : null, "postPhoto" )
+    .then(res => {
+      res = JSON.parse(res);
+      console.log(res);
+      // 处理响应
+      // post.userSend(params);
+      if(res.code == 200){
+        console.log("发送成功")
+        uni.showToast({
+          title: '发送成功',
+          icon:'success',
+          duration: 2000
+        })
+        setTimeout(() => {
+            uni.navigateBack()
+          }, 2000);
+      }
+      if(res.code == 400){
+        uni.showToast({
+          title: '发送失败',
+          icon:'none',
+          duration: 2000
+        })
+      }
+    })
+    .catch(error => {
+      // 处理错误
+      console.error(error);
+    });
+  }
+  
   
 }
 

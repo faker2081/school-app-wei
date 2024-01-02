@@ -5,40 +5,6 @@
 			"^uv-(.*)": "@uni_modules/uv-ui/components/uv-$1/uv-$1.vue"
 		}
 	},
-	// 校园论坛子包
-	"subPackages":[ 
-		{
-			"root": "pages/schoolForum/",
-			"pages": [
-				{
-					"path": "index/index",
-					"style": {
-						"navigationStyle": "custom"
-					}
-				},
-				{
-					"path": "search/index",
-					"style": {
-							"navigationStyle": "custom"
-					}
-				},
-				{ // 发帖页面
-					"path": "sendPost/index",
-					"style": {
-							"navigationStyle": "custom"
-					}
-				}
-				{ // 贴子详情
-					"path": "postInfo/index",
-					"style": {
-							"navigationStyle": "custom"
-					}
-				}
-				
-			],
-			"name": "schoolForum"
-		}
-	],
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 
 		// 登录
@@ -54,6 +20,32 @@
 				"navigationStyle": "custom"
 			}
 		},
+		{ // 首页
+			"path": "pages/schoolForum/index/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		
+		{ // 搜索
+			"path": "pages/schoolForum/search/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{ // 搜索
+			"path": "pages/schoolForum/sendPost/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{ // 贴子信息
+			"path": "pages/schoolForum/postInfo/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		
 		{
 			"path": "pages/login/login-problems",
 			"style": {

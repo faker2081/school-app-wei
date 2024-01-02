@@ -1,5 +1,6 @@
 <template>
   <uv-upload
+  ref="fileUpload"
       :fileList="imageList"
       :name="name"
       :uploadIcon="uploadIcon"
@@ -7,25 +8,31 @@
       :width="width"
       :height="height"
       :custom-style="customStyle"
-      multiple
       :disabled="disabled"
       :maxCount="maxCount"
       :deletable="deletable"
       :useBeforeRead="true"
-      :maxSize="maxSize * 1048576"
       @beforeRead="beforeRead"
       @afterRead="afterRead"
       @delete="fileDelete"
   ></uv-upload>
 </template>
 <script setup>
-import {ref, reactive, getCurrentInstance, defineEmits, watchEffect} from 'vue'
+import {ref, reactive, getCurrentInstance, defineEmits, watch, watchEffect} from 'vue'
 const {proxy} = getCurrentInstance()
 
 const props = defineProps({
   parentImageList:{
     type:Array,
     default:[],
+  },
+  tableId: {    // 表id
+    type: String,
+    default: ''
+  },
+  tableName: {      // 表名称
+    type: String,
+    default: ''
   },
   type: {                 // 文件类型
     type: String,
@@ -61,7 +68,7 @@ const props = defineProps({
   },
   //内部预览图片区域和选择图片按钮的区域宽度，单位rpx，不能是百分比，或者auto
   width:{
-    type:Number||String||Object
+    type:Number||String
   },
   //内部预览图片区域和选择图片按钮的区域高度，单位rpx，不能是百分比，或者auto
   height:{
@@ -76,10 +83,6 @@ const props = defineProps({
     type:Boolean,
     default: false
   },
-  maxSize:{
-    type:Number,
-    default:100
-  }
 })
 let imageList = ref([]);           // 图片列表
 let addList = [];           // 图片新增列表
@@ -88,17 +91,17 @@ let uploadIf = ref(true)
 const emits = defineEmits(['imageListArray','initImage','delImageListArray']);
 imageList.value = props.parentImageList;
 const beforeRead = async (e)=>{
-  console.log('上', e)
-  const size = (e.file[0].size) / 1024 / 1024
+  // console.log('上', e)
+  const size = (e.file.size) / 1024 / 1024
   let index;
   let type;
-  // #ifdef H5
-  index = e.file[0].name.indexOf('.')
-  type = e.file[0].name.substring(index + 1)
+  // #ifdef APP-PLUS || H5
+  index = e.file.name.indexOf('.')
+  type = e.file.name.substring(index + 1)
   // #endif
   // #ifdef MP-WEIXIN
-  index = e.file[0].url.indexOf('.')
-  type = e.file[0].url.substring(index + 1)
+  index = e.file.url.indexOf('.')
+  type = e.file.url.substring(index + 1)
   // #endif
   if (type !== 'png' && type !== 'jpg' && type !== 'jpeg') {
     uni.showToast({
@@ -111,7 +114,7 @@ const beforeRead = async (e)=>{
     if (size > 2) {
       uni.showToast({
         icon:'none',
-        title:'上传图片大小不能超过' + maxSize + 'MB'
+        title:'文件大小超过限制，最多不能超过2M'
       })
       uploadIf.value = false
     }else {
@@ -119,6 +122,12 @@ const beforeRead = async (e)=>{
     }
   }
 }
+// 初始化数据
+let init = async (e) => {
+  imageList.value = [];
+}
+
+init();
 
 
 // 删除图片
@@ -153,16 +162,29 @@ let fileDelete = (e, key) => {
     emits('imageListArray', addList, imageList.value,props.type)
   }
 }
-
+const fileUpload = ref(null)
 // 新增图片
 const afterRead = async (event) => {
-  // 此时可以自行将文件上传至服务器
   let lists = [].concat(event.file);
   console.log(event)
-  if(uploadIf.value){
-    emits('imageListArray', lists, imageList.value,props.type)
+  console.log(fileUpload)
+  // document.getElementById("file").value
+  if (uploadIf.value) {
+    // 此时可以自行将文件上传至服务器
+    for (let i = 0; i < lists.length; i++) {
+      // lists[i].originalFilename = lists[i].name;
+      imageList.value.push(lists[i]);
+      addList.push(lists[i]);
+    }
+    emits('imageListArray', addList, imageList.value, props.type)
   }
+  
+
+
 };
+watchEffect(()=>{
+  init();
+})
 </script>
 <style scoped lang="scss">
 .form {}

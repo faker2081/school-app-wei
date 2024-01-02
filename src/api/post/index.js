@@ -1,4 +1,5 @@
 import baseUrl from '@/api/env.js'
+
 export default {
 	// 发送帖子 post
   send: baseUrl+`/post/userPost`,

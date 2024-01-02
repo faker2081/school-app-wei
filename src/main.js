@@ -22,7 +22,6 @@ import HeaderUser from "@/components/header/headerUser.vue";
 import Tabbar from "@/components/tabbar/index.vue";
 
 
-
 export function createApp() {
     const app = createSSRApp(App);
     app.config.globalProperties.http = Http;

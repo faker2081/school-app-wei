@@ -1,7 +1,7 @@
 // 项目公共配置
 let config = {
 	// 正式接口前缀
-	API_PRO_HOST: 'http://159.75.201.124:8060',
+	API_PRO_HOST: 'http://122.51.38.11:8060',
 	// 测试接口前缀
 	API_DEV_HOST: '/api',
 	// wechatID

@@ -2,6 +2,7 @@
 /* TODO： 封装头部调整
  * 异步请求封装，提供get、post的异步函数
  */
+import axios from 'axios'
 //请求返回参数
 let httpServe = (resolve, res) =>{
 	if (res.statusCode == 200) {
@@ -54,7 +55,7 @@ let http = {
         } else if (type === 'HEADER_XWWW') {
             headers['Content-Type'] = 'application/x-www-form-urlencoded';
         } else if (type === 'FORM_DATA') {
-            headers['Content-Type'] = 'multipart/form-data';
+            // headers['Content-Type'] = 'multipart/form-data';
         }
 
         if(grant_type) {
@@ -188,16 +189,17 @@ let http = {
      * @param {String} grant_type[请求头grant_type参数]
      * @param {Boolean} login[是否登录存入请求头]
      **/
-    upload: function (url, formData, loading, type = 'FORM_DATA', grant_type = '', login = false) {
+    upload: function (url, formData,filePath, name, loading, type = 'FORM_DATA', grant_type = '', login = false) {
         if (loading) this.initload();
 		let header = this.handleHeader(type, grant_type, login)
         if (!url) return 0;
         return new Promise(function (resolve,reject){
             uni.uploadFile({
                 url: url,
-                name: 'file',
+                name: name,
                 header: header,
                 formData: formData,
+                filePath:filePath,
                 success: (res) => {
                     uni.hideLoading();
                     httpServe(resolve, res);
@@ -206,7 +208,7 @@ let http = {
                     uni.hideLoading();
                     uni.showToast({
                         title: '网络错误',
-                        duration: 2000
+                        duration: 2000, icon: 'error'
                     });
                     reject(err);
                 }
@@ -234,6 +236,7 @@ let http = {
             });
         });
     },
+
 
 };
 

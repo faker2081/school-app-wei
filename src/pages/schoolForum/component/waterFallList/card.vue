@@ -23,10 +23,11 @@
   </view>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 import baseUrl from '@/api/env.js'
+import postApi from '@/api/post/index.js'
 
-
+const {proxy} = getCurrentInstance();
 console.info(baseUrl)
 let props = defineProps({
   item: {
@@ -65,12 +66,12 @@ function contentInfo(item) {
 }
 const userInfo = uni.getStorageSync("userInfo")
 // 点赞
-function like() {
+async function like() {
   if(props.item.isUserLikePost){
     props.item.likeNum -= 1;
     props.item.isUserLikePost = false;
     console.info(userInfo)
-    let res = proxy.http.asyncGet(postApi.cancelLike(userInfo.id, props.item.id));
+    let res = await proxy.http.asyncGet(postApi.cancelLike(userInfo.id, props.item.id));
     if(res.code == 200){
       console.info('取消点赞成功')
     }else{
@@ -80,7 +81,7 @@ function like() {
     props.item.likeNum += 1;
     props.item.isUserLikePost = true;
     console.info(userInfo)
-    let res = proxy.http.asyncGet(postApi.like(userInfo.id, props.item.id));
+    let res = await proxy.http.asyncGet(postApi.like(userInfo.id, props.item.id));
     if(res.code == 200){
       console.info('点赞成功')
     }else{

@@ -1,36 +1,51 @@
 <template>
-  <view class="post-item">
-    <view class="post-item__image">
-        <uv-image v-if="item.postPhotoUrl" observeLazyLoad mode="heightFix" :src="baseUrl + item.postPhotoUrl" ></uv-image>
-      
-    </view>
-    <view class="post-item__content">
-      <view class="">
-        <text class="content-text">
-          <uv-read-more show-height="100px" :toggle="true" ref="readMore">
-            <rich-text style="word-break: break-all;" class="content" :nodes="item.postText"></rich-text>
-          </uv-read-more>
-        </text>
-      </view>
-      <view class="post-item__content__interaction">
-        <view class="interaction" @click="collect">
-          <uv-icon v-if="item.isUserCollectPost" color="#3775F6" size="28" name="star-fill"></uv-icon>
-          <uv-icon v-else size="28" name="star"></uv-icon>
-          <text class="">{{ item.collectionNum }}</text>
-        </view>
-        <view class="interaction" @click="like">
-          <uv-icon v-if="item.isUserLikePost" color="#F53F3F" size="28" name="thumb-up-fill"></uv-icon>
-          <uv-icon v-else size="28" name="thumb-up"></uv-icon>
-          <text class="">{{ item.likeNum }}</text>
-        </view>
-        <view class="interaction" @click="comment">
-          <uv-icon size="28" name="chat"></uv-icon>
-          <text class="">{{ item.commentNum }}</text>
-        </view>
+  <view>
+    <view class="post-item">
+      <view class="post-item__image">
+          <uv-image v-if="item.postPhotoUrl" observeLazyLoad mode="heightFix" :src="baseUrl + item.postPhotoUrl" ></uv-image>
         
       </view>
+      <view class="post-item__content">
+        <view class="">
+          <text class="content-text">
+            <uv-read-more show-height="100px" :toggle="true" ref="readMore">
+              <rich-text style="word-break: break-all;" class="content" :nodes="item.postText"></rich-text>
+            </uv-read-more>
+          </text>
+        </view>
+        <view class="post-item__content__interaction">
+          <view class="interaction" @click="collect">
+            <uv-icon v-if="item.isUserCollectPost" color="#3775F6" size="28" name="star-fill"></uv-icon>
+            <uv-icon v-else size="28" name="star"></uv-icon>
+            <text class="">{{ item.collectionNum }}</text>
+          </view>
+          <view class="interaction" @click="like">
+            <uv-icon v-if="item.isUserLikePost" color="#F53F3F" size="28" name="thumb-up-fill"></uv-icon>
+            <uv-icon v-else size="28" name="thumb-up"></uv-icon>
+            <text class="">{{ item.likeNum }}</text>
+          </view>
+          <view class="interaction" @click="comment">
+            <uv-icon size="28" name="chat"></uv-icon>
+            <text class="">{{ item.commentNum }}</text>
+          </view>
+          
+        </view>
+      </view>
+      
     </view>
+    <view>
+      <!-- 评论弹框 -->
+      <uv-popup ref="commentRef" type="bottom" class="comment-pop" @change="onChangePop">
+          <view class="comment-pop-content">
+              <uv-input placeholder="请输入评论内容" border="surround" shape="circle" v-model="inputVal"
+                  :focus="comtIptFocusStatus"></uv-input>
+              <view class="send" :style="{ background: themeColor }" @click="sendComment">发送</view>
+          </view>
+      </uv-popup>
+    </view>
+      
   </view>
+    
 </template>
 <script setup>
 import { ref, getCurrentInstance } from 'vue'
@@ -45,6 +60,10 @@ let props = defineProps({
   item: {
     type: Object,
     default: () => {}
+  },
+  themeColor: {
+      type: String,
+      default: '#1DBFB6'
   }
 })
 const userInfo = uni.getStorageSync("userInfo")
@@ -54,12 +73,12 @@ onReady(() => {
   readMore.value.init()
 })
 //收藏
-function collect() {
+async function collect() {
   if(props.item.isUserCollectPost){
     props.item.collectionNum -= 1;
     props.item.isUserCollectPost = false;
     console.info(userInfo)
-    let res = proxy.http.asyncGet(postApi.cancelCollect(userInfo.id, props.item.id));
+    let res = await proxy.http.asyncGet(postApi.cancelCollect(userInfo.id, props.item.id));
     if(res.code == 200){
       console.info('取消收藏成功')
     }else{
@@ -69,7 +88,7 @@ function collect() {
     props.item.collectionNum += 1;
     props.item.isUserCollectPost = true;
     console.info(userInfo)
-    let res = proxy.http.asyncGet(postApi.collect(userInfo.id, props.item.id));
+    let res = await proxy.http.asyncGet(postApi.collect(userInfo.id, props.item.id));
     if(res.code == 200){
       console.info('收藏成功')
     }else{
@@ -78,12 +97,12 @@ function collect() {
   }
 }
 // 点赞
-function like() {
+async function like() {
   if(props.item.isUserLikePost){
     props.item.likeNum -= 1;
     props.item.isUserLikePost = false;
     console.info(userInfo)
-    let res = proxy.http.asyncGet(postApi.cancelLike(userInfo.id, props.item.id));
+    let res = await proxy.http.asyncGet(postApi.cancelLike(userInfo.id, props.item.id));
     if(res.code == 200){
       console.info('取消点赞成功')
     }else{
@@ -93,7 +112,7 @@ function like() {
     props.item.likeNum += 1;
     props.item.isUserLikePost = true;
     console.info(userInfo)
-    let res = proxy.http.asyncGet(postApi.like(userInfo.id, props.item.id));
+    let res = await proxy.http.asyncGet(postApi.like(userInfo.id, props.item.id));
     if(res.code == 200){
       console.info('点赞成功')
     }else{
@@ -102,6 +121,61 @@ function like() {
   }
 }
 
+// 输入框的value
+const inputVal = ref('')
+function comment() {
+  openPop()
+}
+
+
+// 评论弹窗相关
+const commentRef = ref() // uni_popup 弹框实例
+const comtIptFocusStatus = ref(false) // 评论输入框聚焦状态
+/**
+ * 弹框change事件
+ */
+ function onChangePop(e) {
+    comtIptFocusStatus.value = e.show
+}
+
+/**
+ * 关闭评论弹框
+ * @param msg 提示信息 不传则不提示
+ */
+ function close(msg) {
+    commentRef.value.close()
+    inputVal.value = ''
+    if (msg) uni.showToast({ title: msg, icon: 'none' })
+}
+
+/**
+ * 打开评论弹框
+ */
+ function openPop() {
+    commentRef.value.open()
+}
+
+// 评论
+async function sendComment() {
+  const commentForm = {
+    commentText: inputVal.value,
+    userId: userInfo.id,
+    replyCommentId: null,
+    postId: props.item.id,
+    isCommentsAnonymous: 0
+  }
+  if (inputVal.value) {
+    let res = await proxy.http.asyncPost(postApi.comment, commentForm);
+    if (res.code == 200) {
+      close('评论成功')
+      props.item.commentNum += 1;
+    } else {
+      close('评论失败')
+    }
+  }else {
+    uni.showToast({ title: "评论信息不能为空！", icon: 'none' })
+  }
+}
 </script>
 <style scoped lang="scss">
 .post-item {
@@ -140,4 +214,24 @@ function like() {
   align-items: center;
 }
 
+.comment-pop-content {
+    height: 100rpx;
+    width: 750rpx;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+
+    .send {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 120rpx;
+        height: 40rpx;
+        border-radius: 60rpx;
+        font-size: 28rpx;
+        font-weight: 500;
+        color: #ffffff;
+        margin-left: 18rpx;
+    }
+}
 </style>

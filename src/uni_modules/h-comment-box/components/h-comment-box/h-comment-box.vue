@@ -13,13 +13,13 @@
                 <!-- 用户信息 -->
                 <view class="h_info">
                     <view class="name" :style="{ color: themeColor }">{{ item.name }}</view>
-                    <view class="like" :style="{ color: item.isLike ? themeColor : '#9a9a9a' }">
+                    <!-- <view class="like" :style="{ color: item.isLike ? themeColor : '#9a9a9a' }">
                         <view class="num" :style="{ color: item.isLike ? themeColor : '#9a9a9a' }">{{ item.likeNum }}</view>
-                        <u-icon v-if="!item.isLike" name="thumb-up" :size="30" color="#9a9a9a"
-                            @click="getLike(index)"></u-icon>
-                        <u-icon v-if="item.isLike" name="thumb-up-fill" :color="themeColor" :size="30"
-                            @click="getLike(index)"></u-icon>
-                    </view>
+                        <uv-icon v-if="!item.isLike" name="thumb-up" :size="30" color="#9a9a9a"
+                            @click="getLike(index)"></uv-icon>
+                        <uv-icon v-if="item.isLike" name="thumb-up-fill" :color="themeColor" :size="30"
+                            @click="getLike(index)"></uv-icon>
+                    </view> -->
                 </view>
 
                 <!-- 一级评论 => 文本 -->
@@ -48,19 +48,19 @@
                                     {{ item_s.name }}
                                 </view>
 
-                                <u-icon v-if="item_s.to_user_id" name="play-right-fill" color="#868686" size="10"></u-icon>
+                                <uv-icon v-if="item_s.to_user_id" name="play-right-fill" color="#868686" size="10"></uv-icon>
                                 <view class="right-name">
                                     {{ item_s.to_user_name }}
                                 </view>
                             </view>
-                            <view class="like" :style="{ color: item_s.isLike ? themeColor : '#9a9a9a' }">
+                            <!-- <view class="like" :style="{ color: item_s.isLike ? themeColor : '#9a9a9a' }">
                                 <view class="num" :style="{ color: item_s.isLike ? themeColor : '#9a9a9a' }">{{
                                     item_s.likeNum }}</view>
-                                <u-icon v-if="!item_s.isLike" name="thumb-up" :size="30" color="#9a9a9a"
-                                    @click="getLike(index, j)"></u-icon>
-                                <u-icon v-if="item_s.isLike" name="thumb-up-fill" :color="themeColor" :size="30"
-                                    @click="getLike(index, j)"></u-icon>
-                            </view>
+                                <uv-icon v-if="!item_s.isLike" name="thumb-up" :size="30" color="#9a9a9a"
+                                    @click="getLike(index, j)"></uv-icon>
+                                <uv-icon v-if="item_s.isLike" name="thumb-up-fill" :color="themeColor" :size="30"
+                                    @click="getLike(index, j)"></uv-icon>
+                            </view> -->
                         </view>
                         <view class="text">{{ item_s.contentStr }}</view>
                         <view class="date">
@@ -75,16 +75,16 @@
 
 
                     <!-- loading -->
-                    <u-loading-icon class="p-t-20" :show="item.isLoading" :color="themeColor" textColor="#ccc" text="加载中"
+                    <uv-loading-icon class="p-t-20" :show="item.isLoading" :color="themeColor" textColor="#ccc" text="加载中"
                         :duration="1500">
-                    </u-loading-icon>
+                    </uv-loading-icon>
 
                     <!-- 展开更多二级评论 -->
                     <view class="reply-more" @tap="showAllReply(index, item)"
                         v-if="item.allReply && Number(item.allReply) - item.replyList.length">
                         <view class="left-line" />
                         展开{{ item.allReply - item.replyList.length }}条回复
-                        <u-icon class="more" name="arrow-down" :size="20"></u-icon>
+                        <uv-icon class="more" name="arrow-down" :size="20"></uv-icon>
                     </view>
 
                     <!-- 收起二级评论 -->
@@ -92,7 +92,7 @@
                         v-if="item.allReply && Number(item.allReply) === item.replyList.length">
                         <view class="left-line" />
                         收起回复
-                        <u-icon class="more" name="arrow-up" :size="20"></u-icon>
+                        <uv-icon class="more" name="arrow-up" :size="20"></uv-icon>
                     </view>
 
 
@@ -102,13 +102,13 @@
 
 
         <!-- 评论弹框 -->
-        <uni-popup ref="revertRef" type="bottom" class="comment-pop" @change="onChangePop">
+        <uv-popup ref="revertRef" type="bottom" class="comment-pop" @change="onChangePop">
             <view class="comment-pop-content">
                 <up-input :placeholder="placeholder" border="surround" shape="circle" v-model="inputVal"
                     :focus="comtIptFocusStatus" @change="onChangeIput"></up-input>
                 <view class="send" :style="{ background: themeColor }" @click="sendComment">发送</view>
             </view>
-        </uni-popup>
+        </uv-popup>
     </view>
 </template>
 
@@ -116,7 +116,13 @@
 import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 
+// 服务器链接
+import baseUrl from '@/api/env.js'
+// 贴子接口
+import postApi from '@/api/post/index'
 
+const userInfo = uni.getStorageSync('userInfo');
+const proxy = getCurrentInstance().proxy;
 /**
  * 评论组件
  * @props list 评论列表
@@ -220,7 +226,7 @@ function onChangePop(e) {
 /**
  * 发送评论
  */
-function sendComment() {
+async function sendComment() {
     /**
      * @argument index 一级评论索引
      * @argument row 一级评论信息
@@ -228,20 +234,44 @@ function sendComment() {
      * @argument row_s 二级评论信息
      * @callback ()=>{} 发送评论接口成功之后 调用sendComment的第二个形参 该形参为方法，更新组件内的评论列表
      */
-    emit('sendComment', {
-        index: isComtIndex.value,
-        row: isComtRow.value,
-        index_s: isComtIndex_s.value,
-        row_s: isComtRow_s.value,
-    }, (data) => {
-        if (isComtIndex_s.value !== null) {
-            commentList.value[isComtIndex.value].replyList.unshift({...data,isMyComment:true})
+    // emit('sendComment', {
+    //     index: isComtIndex.value,
+    //     row: isComtRow.value,
+    //     index_s: isComtIndex_s.value,
+    //     row_s: isComtRow_s.value,
+    // }, (data) => {
+    //     if (isComtIndex_s.value !== null) {
+    //         commentList.value[isComtIndex.value].replyList.unshift({...data,isMyComment:true})
 
-        } else {
-            commentList.value.unshift({...data,isMyComment:true})
+    //     } else {
+    //         commentList.value.unshift({...data,isMyComment:true})
+    //     }
+    //     close()
+    // })
+    let postForm = {};
+    if( firstLevel.value ){
+        postForm = {
+            commentText: isComtIndex.value,
+            userId: userInfo.id,
+            postId: null,
+            isCommentsAnonymous: 0,
         }
-        close()
-    })
+    }else {
+        postForm = {
+            commentText: isComtIndex.value,
+            userId: userInfo.id,
+            postId: null,
+            isCommentsAnonymous: 0,
+        }
+    }
+    const res = await proxy.http.asyncPost(postApi.sendComment, postForm)
+    if (isComtIndex_s.value !== null) {
+        commentList.value[isComtIndex.value].replyList.unshift({...data,isMyComment:true})
+
+    } else {
+        commentList.value.unshift({...data,isMyComment:true})
+    }
+    close()
 }
 
 
@@ -299,7 +329,7 @@ onLoad(() => {
 
 
 
-
+let firstLevel = ref(true);
 /**
 * 回复评论弹框
  * @param index  一级评论索引
@@ -320,6 +350,8 @@ function showRevertPop(index, row, j, row_s) {
         allReply: row.allReply,
         isMyComment:row.isMyComment,
     }
+    firstLevel.value = j !== null ? false : true;
+
     if (j !== null) isComtIndex_s.value = j // 保存当前评论,发送评论时使用
     if (row_s !== null) {
         isComtRow_s.value = {

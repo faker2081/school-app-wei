@@ -50,6 +50,11 @@ export default {
     return baseUrl+`/post/getPostDetail?userId=${userId}&postId=${postId}`;
   },
 
+   // 获取帖子详情 get
+   getPostDetailUniapp: (userId, postId) => {
+    return baseUrl+`/post/getPostDetail/uni-app?userId=${userId}&postId=${postId}`;
+  },
+
   // 获取用户点赞过的帖子列表 post
   getLikePostList: baseUrl+`/post/getMyLikePost` ,
 

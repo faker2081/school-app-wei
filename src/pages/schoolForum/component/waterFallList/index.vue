@@ -40,10 +40,10 @@ const userInfo = uni.getStorageSync('userInfo');
 // 查询表单
 let queryForm = reactive({
   pageNo: 1, // 页码
-  pageSize: 6,  // 条数
+  pageSize: 10,  // 条数
   search: {
     userId: userInfo.id,
-    region: "吉林省;长春市",  // 筛选该地区的帖子，遵循格式
+    region: "",  // 筛选该地区的帖子，遵循格式
     context: "",
     school: "",  // E，筛选该学校的帖子
     tag: "工作",  // E，筛选具有该标签的帖子

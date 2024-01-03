@@ -86,6 +86,9 @@ onReady(() => {
 
 <style lang="scss" scoped>
 
+.box-all{
+  margin-top: 35px;
+}
 .content-box {
   background-color: aquamarine;
   width: 100%;

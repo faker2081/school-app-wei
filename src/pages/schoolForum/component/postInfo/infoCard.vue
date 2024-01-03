@@ -1,9 +1,12 @@
 <template>
   <view>
     <view class="post-item">
-      <view class="post-item__image">
-          <uv-image v-if="item.postPhotoUrl" observeLazyLoad mode="heightFix" :src="baseUrl + item.postPhotoUrl" ></uv-image>
-        
+      <view class="post-item__image" v-if="item.postPhotoUrl">
+          <uv-image  observeLazyLoad :showError="false" mode="widthFix" :src="baseUrl + item.postPhotoUrl" @tap="onPreviewImage(baseUrl + item.postPhotoUrl)">
+            <template #error>
+              
+            </template>
+          </uv-image>
       </view>
       <view class="post-item__content">
         <view class="">
@@ -155,6 +158,15 @@ const comtIptFocusStatus = ref(false) // 评论输入框聚焦状态
     commentRef.value.open()
 }
 
+// 预览图片
+let onPreviewImage = (url)=> {
+
+  uni.previewImage({
+    // 先filter找出为图片的item，再返回filter结果中的图片url
+    urls: [url],
+  });
+};
+
 // 评论
 async function sendComment() {
   const commentForm = {
@@ -181,17 +193,19 @@ async function sendComment() {
 .post-item {
   padding: 10px;
   // width: 200%;
-  margin-top: 35px;
+  
   background: #f5f5f5;
   overflow: hidden;
   border-radius: 6px;
   &__image {
+    display: flex !important;; 
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
     display: block; 
     margin: 0 auto;
-    display: flex;
-    justify-content: space-around;
   }
   &__content {
+    margin-top: 1px;
     padding: 15px;
     background: #fff;
     .content-text{
@@ -207,6 +221,11 @@ async function sendComment() {
     }
   }
 }
+
+.error-text{
+  display: flex;
+}
+
 .interaction{
   width: 200rpx;
   display: flex;

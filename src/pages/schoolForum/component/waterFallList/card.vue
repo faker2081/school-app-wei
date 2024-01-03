@@ -1,7 +1,7 @@
 <template>
   <view class="waterfall-item">
     <view class="waterfall-item__image"  @click="contentInfo(item)">
-      <uv-image v-if="item.postPhotoUrl" observeLazyLoad :src="baseUrl + item.postPhotoUrl" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
+      <uv-image v-if="item.postPhotoUrl" observeLazyLoad :src="baseUrl + item.postPhotoUrl" :showError="true" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
       <!-- <uv-image v-else src="" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image> -->
     </view>
     <view class="waterfall-item__ft">
@@ -95,9 +95,19 @@ async function like() {
 $show-lines: 1;
 @import '@/uni_modules/uv-ui-tools/libs/css/variable.scss';
 .waterfall-item {
+  border: #333130 solid 1px;
+  background: #fff;
   overflow: hidden;
   margin-top: 10px;
   border-radius: 6px;
+  &__image {
+    width: 50%;
+    display: flex;
+    max-height: 70vh;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
 }
 .waterfall-item__ft {
   padding: 20rpx;
@@ -121,6 +131,7 @@ $show-lines: 1;
     color: #606266;
   }
   &__btn {
+    background: #fff;
     padding: 10px 0;
     display: flex;
     flex-direction: row;

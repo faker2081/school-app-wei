@@ -16,6 +16,9 @@ onShow(() => {
   uni.hideTabBar()
 })
 </script>
-<style lang="sss" scoped>
-
+<style lang="scss" scoped>
+.box-all {
+  height: 100vh;
+  overflow: hidden;
+}
 </style>

@@ -6,7 +6,8 @@
 
             <!-- 一级评论 => 列表 => -->
             <view class="h_left">
-                <up-avatar size="64rpx" :src="item.url"></up-avatar>
+                <uv-avatar v-if="item.url" size="64rpx" :src="baseUrl + item.url"></uv-avatar>
+                <uv-avatar v-else size="64rpx" ></uv-avatar>
             </view>
 
             <view class="h_right">
@@ -42,7 +43,8 @@
                     <!-- 二级评论 => 列表 -->
                     <view class="item_s" v-for="( item_s, j ) in  item.replyList " :key="item_s.index">
                         <view class="user-info">
-                            <up-avatar size="40rpx" :src="item_s.url"></up-avatar>
+                            <uv-avatar v-if="item_s.url" size="40rpx" :src="baseUrl + item_s.url"></uv-avatar>
+                            <uv-avatar v-else size="40rpx" ></uv-avatar>
                             <view class="username">
                                 <view class="left-name">
                                     {{ item_s.name }}
@@ -75,9 +77,9 @@
 
 
                     <!-- loading -->
-                    <uv-loading-icon class="p-t-20" :show="item.isLoading" :color="themeColor" textColor="#ccc" text="加载中"
+                    <!-- <uv-loading-icon class="p-t-20" :show="item.isLoading" :color="themeColor" textColor="#ccc" text="加载中"
                         :duration="1500">
-                    </uv-loading-icon>
+                    </uv-loading-icon> -->
 
                     <!-- 展开更多二级评论 -->
                     <view class="reply-more" @tap="showAllReply(index, item)"
@@ -104,16 +106,16 @@
         <!-- 评论弹框 -->
         <uv-popup ref="revertRef" type="bottom" class="comment-pop" @change="onChangePop">
             <view class="comment-pop-content">
-                <up-input :placeholder="placeholder" border="surround" shape="circle" v-model="inputVal"
-                    :focus="comtIptFocusStatus" @change="onChangeIput"></up-input>
-                <view class="send" :style="{ background: themeColor }" @click="sendComment">发送</view>
+                <uv-input :placeholder="placeholder" border="surround" shape="circle" v-model="inputVal"
+                    :focus="comtIptFocusStatus" @change="onChangeIput"></uv-input>
+                <view class="send" :style="{ background: themeColor }" @click="comment">发送</view>
             </view>
         </uv-popup>
     </view>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, getCurrentInstance  } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 
 // 服务器链接
@@ -130,13 +132,13 @@ const proxy = getCurrentInstance().proxy;
  * @props themeColor 主题色
  * @props keyNames 指定keyName 详见文档
  * @event getLike 点赞事件
- * @event sendComment 发送评论事件
+ * @event comment 发送评论事件
  * @event getMore 获取更多评论事件
  * @event remove 删除评论事件
  * 
  * @export close 发送评论成功可调用 【close方法】 关闭评论弹框
  *
- * @example <h-comment-box :list="评论列表" v-model="输入框的值" @getLike="点赞回调" @sendComment="发送评论回调" ref="hCommentRef"/>
+ * @example <h-comment-box :list="评论列表" v-model="输入框的值" @getLike="点赞回调" @comment="发送评论回调" ref="hCommentRef"/>
  */
 
 /**
@@ -151,13 +153,17 @@ const props = defineProps({
         type: Array,
         default: () => []
     },
+    postId: { // 贴子id
+        type: String,
+        default: ''
+    },
     modelValue: {
         type: String,
         default: ''
     },
     themeColor: {
         type: String,
-        default: '#1DBFB6'
+        default: '#EC808D'
     },
     keyNames: {
         type: Object,
@@ -195,7 +201,7 @@ const props = defineProps({
 })
 
 // 定义主题色
-const themeColor = ref('#1DBFB6')
+const themeColor = ref('#EC808D')
 
 // 输入框的placeholde
 const placeholder = ref('请输入内容')
@@ -226,15 +232,19 @@ function onChangePop(e) {
 /**
  * 发送评论
  */
-async function sendComment() {
+async function comment() {
     /**
      * @argument index 一级评论索引
      * @argument row 一级评论信息
      * @argument index_s 二级评论索引
      * @argument row_s 二级评论信息
-     * @callback ()=>{} 发送评论接口成功之后 调用sendComment的第二个形参 该形参为方法，更新组件内的评论列表
+     * @callback ()=>{} 发送评论接口成功之后 调用comment的第二个形参 该形参为方法，更新组件内的评论列表
      */
-    // emit('sendComment', {
+    console.info('isComtIndex', isComtIndex.value)
+    console.info('isComtRow', isComtRow.value)
+    console.info('isComtIndex_s', isComtIndex_s.value)
+    console.info('isComtRow_s', isComtRow_s.value)
+    // emit('comment', {
     //     index: isComtIndex.value,
     //     row: isComtRow.value,
     //     index_s: isComtIndex_s.value,
@@ -251,27 +261,48 @@ async function sendComment() {
     let postForm = {};
     if( firstLevel.value ){
         postForm = {
-            commentText: isComtIndex.value,
+            superCommentId: isComtRow.value.id,
+            replyCommentId: isComtRow.value.id,
+            commentText: inputVal.value,
+            contentStr: inputVal.value, // 用户评论内容-前端使用
+
+            url: userInfo.photoUrl,
+            name: isComtRow.value.name,
+            date: proxy.dayjs(new Date()).format('YYYY年MM月DD日 HH:mm'),
             userId: userInfo.id,
-            postId: null,
+            postId: props.postId,
             isCommentsAnonymous: 0,
         }
     }else {
         postForm = {
-            commentText: isComtIndex.value,
+            superCommentId: isComtRow_s.value.superCommentId,
+            replyCommentId: isComtRow_s.value.id,
+            commentText: inputVal.value,
+            contentStr: inputVal.value, // 用户评论内容-前端使用
+            url: userInfo.photoUrl,
+            name: isComtRow_s.value.name,
+            date: proxy.dayjs(new Date()).format('YYYY年MM月DD日 HH:mm'),
+            to_user_name: isComtRow_s.value.to_user_name,
+
             userId: userInfo.id,
-            postId: null,
+            postId: props.postId,
             isCommentsAnonymous: 0,
         }
     }
-    const res = await proxy.http.asyncPost(postApi.sendComment, postForm)
-    if (isComtIndex_s.value !== null) {
-        commentList.value[isComtIndex.value].replyList.unshift({...data,isMyComment:true})
+    console.info(postForm)
+    const res = await proxy.http.asyncPost(postApi.comment, postForm)
+    if(res.code == 200){
+        if (isComtIndex_s.value !== null) {
+            commentList.value[isComtIndex.value].replyList.unshift({...postForm,isMyComment:true})
 
-    } else {
-        commentList.value.unshift({...data,isMyComment:true})
+        } else {
+            commentList.value.unshift({...postForm,isMyComment:true})
+        }
+        close()
+    }else{
+        uni.showToast({title: res.msg, icon: 'none'});
     }
-    close()
+    
 }
 
 
@@ -280,7 +311,7 @@ async function sendComment() {
 /**
  * 定义事件
  */
-const emit = defineEmits(['getLike', 'sendComment', 'getMore', 'remove', 'update:modelValue'])
+const emit = defineEmits(['getLike', 'comment', 'getMore', 'remove', 'update:modelValue'])
 defineExpose({
     close
 })
@@ -292,13 +323,15 @@ const commentList = ref([])
 
 
 onLoad(() => {
+    console.log('h-comment-box onLoad', props.list)
     commentList.value = props.list.map((item) => {
         return {
+            superCommentId: item.superCommentId,
             id: item[props.keyNames.id],
             name: item[props.keyNames.user_name],
             url: item[props.keyNames.user_avatar],
             contentText: item[props.keyNames.user_content],
-            date: item[props.keyNames.user_date],
+            date: proxy.dayjs(item[props.keyNames.user_date]).format('YYYY年MM月DD日 HH:mm'),
             isLike: item[props.keyNames.user_is_like],
             likeNum: item[props.keyNames.user_like_num],
             isLoading: item[props.keyNames.isLoading],
@@ -306,12 +339,13 @@ onLoad(() => {
             isMyComment:item[props.keyNames.isMyComment],
             replyList: item[props.keyNames.user_reply_list].map((item_s) => {
                 return {
+                    superCommentId: item_s.superCommentId,
                     id: item_s[props.keyNames.user_reply_id],
                     pid: item_s[props.keyNames.pid],
                     name: item_s[props.keyNames.user_reply_name],
                     url: item_s[props.keyNames.user_reply_avatar],
                     contentStr: item_s[props.keyNames.user_reply_content],
-                    date: item_s[props.keyNames.user_reply_date],
+                    date: proxy.dayjs(item_s[props.keyNames.user_reply_date]).format('YYYY年MM月DD日 HH:mm'),
                     isLike: item_s[props.keyNames.user_reply_is_like],
                     likeNum: item_s[props.keyNames.user_reply_like_num],
                     to_user_name: item_s[props.keyNames.to_user_name],
@@ -364,6 +398,8 @@ function showRevertPop(index, row, j, row_s) {
             isLike: row_s.isLike,
             likeNum: row_s.likeNum,
             user_isMyComment:row_s.user_isMyComment,
+            to_user_name: row_s.to_user_name,
+            superCommentId: row_s.superCommentId,
         }
     }
 

@@ -33,6 +33,9 @@
           </view>
           
         </view>
+        <view>
+          <text class="post-item__content__time">{{ dayjs(item.postTime).format('YYYY年MM月DD日 HH:mm')  }}</text>
+        </view>
       </view>
       
     </view>
@@ -167,6 +170,7 @@ let onPreviewImage = (url)=> {
   });
 };
 
+const emits = defineEmits(['refreshComments']);
 // 评论
 async function sendComment() {
   const commentForm = {
@@ -181,6 +185,7 @@ async function sendComment() {
     if (res.code == 200) {
       close('评论成功')
       props.item.commentNum += 1;
+      emits("refreshComments");
     } else {
       close('评论失败')
     }
@@ -218,6 +223,11 @@ async function sendComment() {
       flex-direction: row;
       align-items: center;
       justify-content: space-around;
+    }
+    &__time{
+      padding-top: 2px;
+      font-size: 22rpx;
+      color: #999;
     }
   }
 }

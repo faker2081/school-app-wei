@@ -10,14 +10,15 @@
         </view>
       </view>
       <view class="follow-data">
-            <text style="width: 100rpx;">关注：</text><text>{{ userInfo.followNum }}</text>
-            <text style="width: 100rpx; margin-left: 20px">粉丝：</text><text>{{ userInfo.followerNum }}</text>
-        </view>
-        <view class="user-info">
-          <text>{{ userInfo.name }}</text>
-          <text>{{ userInfo.region }}</text>
-        </view>
-        
+        <text style="width: 100rpx;">关注：</text><text>{{ userInfo.followNum }}</text>
+        <text style="width: 100rpx; margin-left: 20px">粉丝：</text><text>{{ userInfo.followerNum }}</text>
+      </view>
+      <view class="follow-data">
+        <text style="width: 100rpx;">昵称：</text><text>{{ userInfo.name ? userInfo.name : '--' }}</text>
+      </view>
+      <view class="follow-data">
+        <text style="width: 100rpx;">地区：</text><text>{{ userInfo.region ? userInfo.region : '--' }}</text>
+      </view>
     </view>
     <view class="footer">
       <view style="float: right; padding: 3px; margin-right: 10px;">
@@ -45,7 +46,7 @@
 </template>
 
 <script setup>
-
+import baseUrl from '@/api/env.js'
 const props = defineProps({
   userInfo: {
     type: Object,
@@ -53,6 +54,12 @@ const props = defineProps({
   }
 })
 
+// 跳转到编辑信息页面
+function edit() {
+  uni.navigateTo({
+    url: '/pages/my/infoForm',
+  })
+}
 
 </script>
 
@@ -62,8 +69,10 @@ const props = defineProps({
   text-align: right;
 }
 .box-all{
+  margin: 2px;
+  background-color: aqua ;
   overflow: hidden;
-  height: 10vh;
+  height: auto !important;;
   background-color: #fff;
   padding: 10px;
   border-radius: 10px;

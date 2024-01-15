@@ -95,6 +95,7 @@ function refreshComments() {
 .content-box {
   // background-color: aquamarine;
   width: 100%;
+  margin-top: 50px;
   .post-box {
     align-items: center;
     padding: 10px 0;

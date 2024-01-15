@@ -1,30 +1,40 @@
 <template>
-  <scroll-view scroll-y="true" class="list-box"
-    :refresher-enabled="true" lower-threshold="150px" @scrolltolower="nextPage" :refresher-triggered="triggered"
-    :refresher-threshold="80" refresher-background="rgb(244, 244, 244)" @refresherpulling="onPulling"
-    @refresherrefresh="onRefresh" @refresherrestore="onRestore" @refresherabort="onAbort">
-    <uv-waterfall  ref="waterfall" v-model="list" :add-time="10" @clear="clear" @changeList="changeList"
-      :left-gap="leftGap" :right-gap="rightGap" :column-gap="columnGap">
-      <template v-slot:list1>
-        <!-- 为了磨平部分平台的BUG，必须套一层view -->
-        <view >
-          <view v-for="(item, index) in list1" :key="index" class="card-box">
-            <card :item="item"> </card>
-          </view>
+    <scroll-view scroll-y="true"  :style="{flex:1}"
+      :refresher-enabled="true" :lower-threshold="50" @scrolltolower="nextPage" :refresher-triggered="triggered"
+      :refresher-threshold="80" refresher-background="rgb(244, 244, 244)" @refresherpulling="onPulling"
+      @refresherrefresh="onRefresh" @refresherrestore="onRestore" @refresherabort="onAbort">
+      <view>
+        <view>
+          <uv-waterfall  ref="waterfall" v-model="list" :add-time="10" @clear="clear" @changeList="changeList"
+            :left-gap="leftGap" :right-gap="rightGap" :column-gap="columnGap">
+            <template v-slot:list1>
+              <!-- 为了磨平部分平台的BUG，必须套一层view -->
+              <view >
+                <view v-for="(item, index) in list1" :key="index" class="card-box">
+                  <card :item="item"> </card>
+                </view>
+              </view>
+            </template>
+            <template v-slot:list2>
+              <!-- 为了磨平部分平台的BUG，必须套一层view -->
+              <view >
+                <view v-for="(item, index) in list2" :key="index" class="card-box">
+                  <card :item="item"> </card>
+                </view>
+              </view>
+            </template>
+            
+          </uv-waterfall>
         </view>
-      </template>
-      <template v-slot:list2>
-        <!-- 为了磨平部分平台的BUG，必须套一层view -->
-        <view >
-          <view v-for="(item, index) in list2" :key="index" class="card-box">
-            <card :item="item"> </card>
-          </view>
+          
+        <view>
+          <uv-load-more :status="loadStatus"></uv-load-more>
         </view>
-      </template>
-    </uv-waterfall>
-
-    <uv-load-more :status="loadStatus"></uv-load-more>
-  </scroll-view>
+        <view>
+          <uv-gap height="100"></uv-gap>
+        </view>
+      </view>
+    </scroll-view>
 </template>
 
 <script setup>
@@ -96,6 +106,7 @@ async function onPulling(e) {
   console.log('下拉刷新');
 }
 let onRefresh= async(e) => {
+  if (freshing.value) return;
   triggered.value = 'restore';
   setTimeout(() => {
     freshing.value = false;

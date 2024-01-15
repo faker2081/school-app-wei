@@ -20,6 +20,12 @@
 				"navigationStyle": "custom"
 			}
 		},
+		{ // 我的
+			"path": "pages/my/infoForm",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
 		{ // 首页
 			"path": "pages/schoolForum/index/index",
 			"style": {

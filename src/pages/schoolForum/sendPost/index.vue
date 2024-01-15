@@ -40,8 +40,7 @@
       
     </view>
 
-    <uv-picker ref="picker" :columns="areaList" keyName="name" @change="change" @confirm="confirm">
-		</uv-picker>
+    <uv-picker ref="picker" :columns="areaList" keyName="name" @change="change" @confirm="confirm"></uv-picker>
     <!--tages-->
     <!--多选器-->
     <uv-popup ref="popup" mode="bottom">

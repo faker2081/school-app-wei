@@ -1,10 +1,8 @@
 <template>
   <view>
-    <view class="header-1" style="overflow-x: auto;">
+    <view class="header-2" style="overflow-x: false;">
       <uv-tabs
-        :scrollable="true"
         :list="props.list"
-        
         lineColor="#f56c6c"
         :activeStyle="{
           color: '#EC808D',
@@ -19,8 +17,9 @@
         itemStyle="padding-left: 15px; padding-right: 15px; height: 34px;"
         @change="changeTab"
         :current="currentIndex"
+        
       ></uv-tabs>
-      <view class="header-1__right" style="display: flex;">
+      <view class="header-2__right" style="display: flex;">
       </view>
     </view>
   </view>
@@ -56,19 +55,19 @@ onLoad(() => {
 
 <style scoped lang="scss">
 ::v-deep uni-page-body{
-  overflow: hidden;
+  
 }
-.header-1 {
-  height: 18px;
+.header-2 {
+  width: 100%;
+  overflow: hidden;
+  // height: 18px;
   background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: block;
   padding-left: 15px;
   padding-right: 15px;
-  justify-content: flex-start;
+  // justify-content: flex-start;
   font-size: 10px!important;
-  .header-1__right{
+  .header-2__right{
     height: 2.5vh;
     display: flex;
     text-align: center;

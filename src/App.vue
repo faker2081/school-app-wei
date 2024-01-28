@@ -26,4 +26,5 @@ export default {
 	/*每个页面公共css */
 	@import './uni.scss';
   @import "./static/iconfont/iconfont.css";
+  @import '@/uni_modules/uv-ui-tools/index.scss';
 </style>

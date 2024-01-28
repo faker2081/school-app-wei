@@ -2,8 +2,6 @@
     <view>
         <view class="h_comment" v-for="(item, index) in  commentList " :key="item.id">
 
-
-
             <!-- 一级评论 => 列表 => -->
             <view class="h_left">
                 <uv-avatar v-if="item.url" size="64rpx" :src="baseUrl + item.url"></uv-avatar>

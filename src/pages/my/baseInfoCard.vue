@@ -6,7 +6,7 @@
     <view class="body">
       <view class="base-info">
         <view class="avatar">
-          <uv-avatar size="70" :src="baseUrl + userInfo.photoUrl"></uv-avatar>
+          <uv-avatar size="70" :src="baseUrl + userInfo.photoUrl" mode="widthFix"></uv-avatar>
         </view>
       </view>
       <view class="follow-data">

@@ -12,8 +12,8 @@
       <template #center>
         <view class="center-box">
           <view class="user-info">
-            <uv-avatar v-if="postInfo.userPhotoUrl" size="35" :src="baseUrl + postInfo.userPhotoUrl"></uv-avatar>
-            <uv-avatar v-else size="35" ></uv-avatar>
+            <uv-avatar v-if="postInfo.userPhotoUrl" size="35" :src="baseUrl + postInfo.userPhotoUrl" mode="widthFix"></uv-avatar>
+            <uv-avatar v-else size="35" mode="widthFix"></uv-avatar>
             <view class="name">{{ postInfo.userName }}</view>
           </view>
           <view class="right-box">

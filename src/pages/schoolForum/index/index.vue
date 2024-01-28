@@ -1,5 +1,6 @@
 <template>
   <view class="box-all">
+    <!-- <uv-tabs :list="list" @click="click"></uv-tabs> -->
     <view class="header-box">
       <tabsBar1 @changeTab="changeTab1"></tabsBar1>
       <tabsBar2 v-if="waterFallListRef" @changeTab="changeTab2" @initTab="changeTab2"></tabsBar2>
@@ -19,7 +20,6 @@ import { ref, getCurrentInstance, reactive } from 'vue'
 import { onLoad, onReady, onShow } from '@dcloudio/uni-app';
 
 const proxy = getCurrentInstance().proxy;
-
 // 切換一级标签
 function changeTab1(e) {
   console.log(e)

@@ -2,11 +2,11 @@
   <view>
     <view class="post-item">
       <view class="post-item__image" v-if="item.postPhotoUrl">
-          <uv-image  observeLazyLoad :showError="false" mode="widthFix" :src="baseUrl + item.postPhotoUrl" @tap="onPreviewImage(baseUrl + item.postPhotoUrl)">
+          <image  observeLazyLoad :showError="false" mode="widthFix" :src="baseUrl + item.postPhotoUrl" @tap="onPreviewImage(baseUrl + item.postPhotoUrl)">
             <!-- <template #error>
               
             </template> -->
-          </uv-image>
+          </image>
       </view>
       <view class="post-item__content">
         <view class="">
@@ -200,13 +200,11 @@ async function sendComment() {
   // width: 200%;
   
   background: #f5f5f5;
-  overflow: hidden;
   border-radius: 6px;
   &__image {
-    display: flex !important;; 
+    display: flex; 
     justify-content: center; /* 水平居中 */
     align-items: center; /* 垂直居中 */
-    display: block; 
     margin: 0 auto;
   }
   &__content {

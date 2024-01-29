@@ -9,7 +9,9 @@
       </view>
       <view class="comment-box">
         <view>
-          <h-comment-box ref="commentBox" v-if="post.postCommentVoList" :postId="postInfo.id" :list="post.postCommentVoList" :keyNames="keyName" @remove="removeComment" @sendComment="sendComment"></h-comment-box>
+          sds
+          <!-- @remove="removeComment" @sendComment="sendComment" -->
+          <hCommentBox ref="commentBox" v-if="post.postCommentVoList" :postId="''+postInfo.id" :list="post.postCommentVoList" :keyNames="keyName" ></hCommentBox>
         </view>
       </view>
     </view>
@@ -21,7 +23,7 @@ import {ref, getCurrentInstance, watchEffect, reactive} from 'vue'
 import { onLoad, onReady } from '@dcloudio/uni-app'
 import infoCard from '../component/postInfo/infoCard.vue';
 import postApi from '@/api/post/index.js'
-// import hCommentBox from "@/uni_modules/h-comment-box/components/h-comment-box/h-comment-box.vue"
+import hCommentBox from "@/pages/schoolForum/component/postInfo/h-comment-box.vue"
 
 const proxy = getCurrentInstance().proxy;
 
@@ -100,7 +102,6 @@ function refreshComments() {
   .post-box {
     align-items: center;
     padding: 10px 0;
-    
     width: 100%;
   }
 }

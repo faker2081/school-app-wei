@@ -28,7 +28,6 @@ import baseUrl from '@/api/env.js'
 import postApi from '@/api/post/index.js'
 
 const {proxy} = getCurrentInstance();
-console.info(baseUrl)
 let props = defineProps({
   item: {
     type: Object,
@@ -59,7 +58,6 @@ function createrInfo() {
 
 // 获取内容信息
 function contentInfo(item) {
-  console.log("内容信息item",item)
   uni.navigateTo({
     url: '/pages/schoolForum/postInfo/index?item=' + encodeURIComponent(JSON.stringify(item)),
   })
@@ -70,7 +68,6 @@ async function like() {
   if(props.item.isUserLikePost){
     props.item.likeNum -= 1;
     props.item.isUserLikePost = false;
-    console.info(userInfo)
     let res = await proxy.http.asyncGet(postApi.cancelLike(userInfo.id, props.item.id));
     if(res.code == 200){
       console.info('取消点赞成功')
@@ -80,7 +77,6 @@ async function like() {
   }else{
     props.item.likeNum += 1;
     props.item.isUserLikePost = true;
-    console.info(userInfo)
     let res = await proxy.http.asyncGet(postApi.like(userInfo.id, props.item.id));
     if(res.code == 200){
       console.info('点赞成功')

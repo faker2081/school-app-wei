@@ -1,5 +1,5 @@
 <template>
-    <scroll-view scroll-y="true"  :style="{flex:1}"
+    <scroll-view scroll-y="true"  :style="{flex:1}" class="scroll-view"
       :refresher-enabled="true" :lower-threshold="50" @scrolltolower="nextPage" :refresher-triggered="triggered"
       :refresher-threshold="80" refresher-background="rgb(244, 244, 244)" @refresherpulling="onPulling"
       @refresherrefresh="onRefresh" @refresherrestore="onRestore" @refresherabort="onAbort">
@@ -64,7 +64,7 @@ let queryForm = reactive({
 // 刷新与加载设置
 let freshing =  ref(false);             //
 let triggered =  ref(false);            //
-let emptyFlag =  ref(false); 
+let clearAllFlag =  ref(false); 
 
 // 瀑布流设置
 const leftGap = 10
@@ -98,12 +98,12 @@ function changeList(e){
 const waterfall = ref(null);
 // 下拉刷新数据
 async function onPulling(e) {
-  freshing.value = true;
+  clearAllFlag.value = true;
+  freshing.value = false;
   waterfall.value.clear();
   setTimeout(() => {
     triggered.value = true;
   }, 0);
-  console.log('下拉刷新');
 }
 let onRefresh= async(e) => {
   if (freshing.value) return;
@@ -111,7 +111,6 @@ let onRefresh= async(e) => {
   setTimeout(() => {
     freshing.value = false;
     triggered.value = false;
-    console.log('刷新完成');
   }, 1000);
   //获取数据的函数
   queryForm.pageNo = 1; // 记录数
@@ -147,7 +146,9 @@ async function onReachBottom() {
     loadStatus.value = 'loading';
     waterfall.value.clear();
     const data = await getData();
+    console.log('listBefore:' , list.value);
     list.value.push.apply(list.value,data);
+    console.log('listAfter:' , list.value);
     loadStatus.value = 'more';
   }
   if (list.value.length < total.value) {
@@ -172,7 +173,6 @@ onLoad(() => {
 })
 
 onReady(() => {
-  console.log('onReady')
   // waterfall.value.clear();
   // initList();
   // console.log(list.value)
@@ -190,12 +190,11 @@ async function getData() {
 
   if (res.code === 200) {
     total.value = res.data.total;
-    if(freshing.value){
+    if(clearAllFlag.value){
       list1.value = [];
       list2.value = [];
-      freshing.value = false;
+      clearAllFlag.value = false;
     }
-    console.log(res.data.list)
     return res.data.list;
   }else{
     uni.showToast({
@@ -217,11 +216,14 @@ defineExpose({
   initList,
   switchTab,
   queryForm,
-  freshing
+  clearAllFlag
 })
 
 </script>
 <style scoped lang="scss">
+.scroll-view{
+  height: 74vh;
+}
 .card-box {
   width: 350rpx;
   margin-bottom: 10rpx;

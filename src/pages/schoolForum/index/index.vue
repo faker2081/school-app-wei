@@ -27,7 +27,7 @@ function changeTab1(e) {
 // 切換二级标签
 function changeTab2(e) {
   console.log(e)
-  waterFallListRef.value.freshing = true;
+  waterFallListRef.value.clearAllFlag = true;
   waterFallListRef.value.queryForm.search.tag = e.name;
   waterFallListRef.value.initList();
 }

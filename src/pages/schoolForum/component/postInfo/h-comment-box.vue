@@ -1,5 +1,6 @@
 <template>
     <view>
+        我是
         <view class="h_comment" v-for="(item, index) in  commentList " :key="item.id">
 
             <!-- 一级评论 => 列表 => -->
@@ -39,7 +40,7 @@
                 <view class="h_revert_list">
 
                     <!-- 二级评论 => 列表 -->
-                    <view class="item_s" v-for="( item_s, j ) in  item.replyList " :key="item_s.index">
+                    <view class="item_s" v-for="( item_s, j ) in  item.replyList " :key="item_s.id">
                         <view class="user-info">
                             <uv-avatar v-if="item_s.url" size="40rpx" :src="baseUrl + item_s.url"></uv-avatar>
                             <uv-avatar v-else size="40rpx" ></uv-avatar>
@@ -114,7 +115,7 @@
 
 <script setup>
 import { ref, getCurrentInstance  } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
+import { onLoad, onReady } from '@dcloudio/uni-app'
 
 // 服务器链接
 import baseUrl from '@/api/env.js'
@@ -320,7 +321,7 @@ defineExpose({
 const commentList = ref([])
 
 
-onLoad(() => {
+onReady(() => {
     console.log('h-comment-box onLoad', props.list)
     commentList.value = props.list.map((item) => {
         return {

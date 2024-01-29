@@ -10,7 +10,7 @@
       </view>
       <view class="waterfall-item__ft__btn">
         <view class="waterfall-item__ft__btn__avatar" @click="createrInfo">
-          <uv-avatar size="30" :src="baseUrl + item.userPhotoUrl" mode="widthFix"></uv-avatar>
+          <uv-avatar size="30" :src="baseUrl + item.userPhotoUrl" mode="aspectFill"></uv-avatar>
           <view class="name">{{ item.userName }}</view>
         </view>
         <view class="waterfall-item__ft__btn__like" @click="like">

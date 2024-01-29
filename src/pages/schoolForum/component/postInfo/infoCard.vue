@@ -3,9 +3,9 @@
     <view class="post-item">
       <view class="post-item__image" v-if="item.postPhotoUrl">
           <uv-image  observeLazyLoad :showError="false" mode="widthFix" :src="baseUrl + item.postPhotoUrl" @tap="onPreviewImage(baseUrl + item.postPhotoUrl)">
-            <template #error>
+            <!-- <template #error>
               
-            </template>
+            </template> -->
           </uv-image>
       </view>
       <view class="post-item__content">

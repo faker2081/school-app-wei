@@ -6,7 +6,7 @@
     <view class="body">
       <view class="base-info">
         <view class="avatar">
-          <uv-avatar size="70" :src="baseUrl + userInfo.photoUrl" mode="widthFix"></uv-avatar>
+          <uv-avatar size="70" :src="baseUrl + userInfo.photoUrl" mode="aspectFill"></uv-avatar>
         </view>
       </view>
       <view class="follow-data">
@@ -70,6 +70,7 @@ function edit() {
 }
 .box-all{
   margin: 2px;
+  height: 100vh;
   background-color: aqua ;
   overflow: hidden;
   height: auto !important;;
@@ -79,6 +80,7 @@ function edit() {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .body{
+  margin-top: 40px;
   width: 98%;
   display: flex;
   justify-content: center;

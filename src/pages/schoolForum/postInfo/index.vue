@@ -38,6 +38,7 @@ const userInfo = uni.getStorageSync('userInfo');
 const post = reactive({});
 async function getPost() {
   const res = await proxy.http.asyncGet(postApi.getPostDetailUniapp(userInfo.id, postInfo.value.id));
+  console.info(res)
   if(res.code == 200){
     Object.assign(post, res.data);
   }

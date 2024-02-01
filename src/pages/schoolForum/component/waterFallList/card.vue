@@ -1,6 +1,6 @@
 <template>
   <view class="waterfall-item">
-    <view class="waterfall-item__image"  @click="contentInfo(item)">
+    <view class="waterfall-item__image"  @click="contentInfo(item.id)">
       <uv-image v-if="item.postPhotoUrl" observeLazyLoad :src="baseUrl + item.postPhotoUrl" :showError="true" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image>
       <!-- <uv-image v-else src="" mode="aspectFit" :style="{width:item.width+'px'}"></uv-image> -->
     </view>
@@ -57,9 +57,9 @@ function createrInfo() {
 }
 
 // 获取内容信息
-function contentInfo(item) {
+function contentInfo(id) {
   uni.navigateTo({
-    url: '/pages/schoolForum/postInfo/index?item=' + encodeURIComponent(JSON.stringify(item)),
+    url: '/pages/schoolForum/postInfo/index?id=' + JSON.stringify(id),
   })
 }
 const userInfo = uni.getStorageSync("userInfo")

@@ -123,29 +123,29 @@ import postApi from '@/api/post/index'
 
 const userInfo = uni.getStorageSync('userInfo');
 const proxy = getCurrentInstance().proxy;
-/**
- * 评论组件
- * @props list 评论列表
- * @props modelValue 评论 输入框的value ==> 可使用 v-model 语法糖
- * @props themeColor 主题色
- * @props keyNames 指定keyName 详见文档
- * @event getLike 点赞事件
- * @event comment 发送评论事件
- * @event getMore 获取更多评论事件
- * @event remove 删除评论事件
- * 
- * @export close 发送评论成功可调用 【close方法】 关闭评论弹框
- *
- * @example <h-comment-box :list="评论列表" v-model="输入框的值" @getLike="点赞回调" @comment="发送评论回调" ref="hCommentRef"/>
- */
+// /**
+//  * 评论组件
+//  * @props list 评论列表
+//  * @props modelValue 评论 输入框的value ==> 可使用 v-model 语法糖
+//  * @props themeColor 主题色
+//  * @props keyNames 指定keyName 详见文档
+//  * @event getLike 点赞事件
+//  * @event comment 发送评论事件
+//  * @event getMore 获取更多评论事件
+//  * @event remove 删除评论事件
+//  * 
+//  * @export close 发送评论成功可调用 【close方法】 关闭评论弹框
+//  *
+//  * @example <h-comment-box :list="评论列表" v-model="输入框的值" @getLike="点赞回调" @comment="发送评论回调" ref="hCommentRef"/>
+//  */
 
-/**
- * 定义props
- * @param list 评论列表
- * @param modelValue 评论 输入框的value
- * @param themeColor 主题色
- * @param keyNames 指定keyName
- */
+// /**
+//  * 定义props
+//  * @param list 评论列表
+//  * @param modelValue 评论 输入框的value
+//  * @param themeColor 主题色
+//  * @param keyNames 指定keyName
+//  */
 const props = defineProps({
     list: {
         type: Array,
@@ -231,13 +231,13 @@ function onChangePop(e) {
  * 发送评论
  */
 async function comment() {
-    /**
-     * @argument index 一级评论索引
-     * @argument row 一级评论信息
-     * @argument index_s 二级评论索引
-     * @argument row_s 二级评论信息
-     * @callback ()=>{} 发送评论接口成功之后 调用comment的第二个形参 该形参为方法，更新组件内的评论列表
-     */
+    // /**
+    //  * @argument index 一级评论索引
+    //  * @argument row 一级评论信息
+    //  * @argument index_s 二级评论索引
+    //  * @argument row_s 二级评论信息
+    //  * @callback ()=>{} 发送评论接口成功之后 调用comment的第二个形参 该形参为方法，更新组件内的评论列表
+    //  */
     console.info('isComtIndex', isComtIndex.value)
     console.info('isComtRow', isComtRow.value)
     console.info('isComtIndex_s', isComtIndex_s.value)
@@ -319,8 +319,8 @@ defineExpose({
 // 评论列表 ==》 根据传入的commentList和传入的keyNames生成新的评论列表
 const commentList = ref([])
 
-// 小程序 onReady； h5 用onLoad
-onLoad(() => {
+// 小程序 onReady h5 用onLoad
+onReady(() => {
     console.log('h-comment-box onLoad', props.list)
     commentList.value = props.list.map((item) => {
         return {
@@ -531,11 +531,11 @@ function showAllReply(index, row) {
 
 
 
-/**
- * 点赞
- * @param index 一级评论索引
- * @param j 二级评论索引
- */
+// /**
+//  * 点赞
+//  * @param index 一级评论索引
+//  * @param j 二级评论索引
+//  */
 function getLike(index, j) {
     /**
      * index 一级评论索引

@@ -1,16 +1,16 @@
 <template>
   <view class="box-all">
     <view class="header-box">
-      <Header-user v-if="postInfo" :postInfo="postInfo" :userName="postInfo.userName"></Header-user>
+      <Header-user v-if="postId" :postInfo="postInfo"></Header-user>
     </view>
     <view class="content-box">
       <view class="post-box">
-        <info-card :item="postInfo" @refreshComments="refreshComments"></info-card>
+        <info-card v-if="postInfo" :item="postInfo" @refreshComments="refreshComments"></info-card>
       </view>
       <view class="comment-box">
         <view>
           <!-- @remove="removeComment" @sendComment="sendComment" -->
-          <hCommentBox ref="commentBox" v-if="post.postCommentVoList" :postId="''+postInfo.id" :list="post.postCommentVoList" :keyNames="keyName" ></hCommentBox>
+          <hCommentBox ref="commentBox" v-if="post.id && post.postCommentVoList" :postId="''+postId" :list="post.postCommentVoList" :keyNames="keyName" ></hCommentBox>
         </view>
       </view>
     </view>
@@ -26,25 +26,34 @@ import hCommentBox from "@/pages/schoolForum/component/postInfo/h-comment-box.vu
 
 const proxy = getCurrentInstance().proxy;
 
+let postId = ref('')
 let postInfo = ref({})
+
 onLoad( (options) => {
-  if(options.item){
-    postInfo.value = JSON.parse(decodeURIComponent(options.item));
+  if(options.id){
+    postId.value = options.id;
   }
-})
-onReady(() => {
   getPost();
 })
+onReady(() => {
+  
+})
+
+function initPostInfo() {
+  postInfo.value = post;
+  postInfo.value.postCommentVoList = null;
+}
 // 获取用户信息
 const userInfo = uni.getStorageSync('userInfo');
 
 const post = reactive({});
 async function getPost() {
-  const res = await proxy.http.asyncGet(postApi.getPostDetail(userInfo.id, postInfo.value.id));
+  const res = await proxy.http.asyncGet(postApi.getPostDetailUniapp(userInfo.id, postId.value));
   console.info(res)
   if(res.code == 200){
     Object.assign(post, res.data);
   }
+  initPostInfo();
 }
 // 评论相关
 const keyName  = { 

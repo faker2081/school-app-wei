@@ -206,6 +206,7 @@ onShow(() => {
 
 <style lang="scss" scoped>
 .box-all{
-  height: 100vh;
+  margin-top: 50px;
+  height: 80vh;
 }
 </style>

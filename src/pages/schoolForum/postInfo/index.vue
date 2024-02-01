@@ -9,7 +9,6 @@
       </view>
       <view class="comment-box">
         <view>
-          sds
           <!-- @remove="removeComment" @sendComment="sendComment" -->
           <hCommentBox ref="commentBox" v-if="post.postCommentVoList" :postId="''+postInfo.id" :list="post.postCommentVoList" :keyNames="keyName" ></hCommentBox>
         </view>
@@ -32,14 +31,16 @@ onLoad( (options) => {
   if(options.item){
     postInfo.value = JSON.parse(decodeURIComponent(options.item));
   }
-   getPost();
+})
+onReady(() => {
+  getPost();
 })
 // 获取用户信息
 const userInfo = uni.getStorageSync('userInfo');
 
 const post = reactive({});
 async function getPost() {
-  const res = await proxy.http.asyncGet(postApi.getPostDetailUniapp(userInfo.id, postInfo.value.id));
+  const res = await proxy.http.asyncGet(postApi.getPostDetail(userInfo.id, postInfo.value.id));
   console.info(res)
   if(res.code == 200){
     Object.assign(post, res.data);
@@ -78,9 +79,7 @@ let commentList = ref();
 function getComments() {
   
 }
-onReady(() => {
 
-})
 
 // 评论刷新
 const commentBox = ref();

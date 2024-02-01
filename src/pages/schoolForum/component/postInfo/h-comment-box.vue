@@ -1,6 +1,5 @@
 <template>
     <view>
-        我是
         <view class="h_comment" v-for="(item, index) in  commentList " :key="item.id">
 
             <!-- 一级评论 => 列表 => -->
@@ -320,8 +319,8 @@ defineExpose({
 // 评论列表 ==》 根据传入的commentList和传入的keyNames生成新的评论列表
 const commentList = ref([])
 
-
-onReady(() => {
+// 小程序 onReady； h5 用onLoad
+onLoad(() => {
     console.log('h-comment-box onLoad', props.list)
     commentList.value = props.list.map((item) => {
         return {

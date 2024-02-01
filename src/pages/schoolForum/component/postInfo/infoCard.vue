@@ -10,11 +10,11 @@
       </view>
       <view class="post-item__content">
         <view class="">
-          <text class="content-text">
+          <view class="content-text">
             <uv-read-more show-height="100px" :toggle="true" ref="readMore">
               <rich-text style="word-break: break-all;" class="content" :nodes="item.postText"></rich-text>
             </uv-read-more>
-          </text>
+          </view>
         </view>
         <view class="post-item__content__interaction">
           <view class="interaction" @click="collect">

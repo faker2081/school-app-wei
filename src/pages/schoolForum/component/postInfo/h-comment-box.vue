@@ -320,7 +320,7 @@ defineExpose({
 const commentList = ref([])
 
 // 小程序 onReady h5 用onLoad
-onReady(() => {
+onLoad(() => {
     console.log('h-comment-box onLoad', props.list)
     commentList.value = props.list.map((item) => {
         return {

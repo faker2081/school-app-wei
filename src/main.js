@@ -12,6 +12,7 @@ import cal from '@/utils/cal.js'
 import ImageUpload from "@/components/imageUpload/index.vue"
 import AreaTree from "@/data/area.js"
 import Tags from "@/data/tages.js"
+import lazyPlugin from 'vue3-lazy'
 
 // 计算自定义高度容器流出
 import TopHeight from "@/common/topHeight"
@@ -32,6 +33,11 @@ export function createApp() {
     app.config.globalProperties.areaTree = AreaTree;
     app.config.globalProperties.tags = Tags;
     app.use(pinia.init);
+    app.use(lazyPlugin, {
+        // loading: require('@/assets/images/default.png'), // 图片加载时默认图片
+        // error: require('@/assets/images/error.png')// 图片加载失败时默认图片
+      })
+    
     app.config.globalProperties.globalDirective = globalDirective;
     app.config.globalProperties.cal = cal;
     app.component('Header', Header);

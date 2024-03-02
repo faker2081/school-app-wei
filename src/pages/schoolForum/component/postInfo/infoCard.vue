@@ -2,7 +2,7 @@
   <view>
     <view class="post-item">
       <view class="post-item__image" v-if="item.postPhotoUrl">
-          <image  observeLazyLoad :showError="false" mode="widthFix" :src="baseUrl + item.postPhotoUrl" @tap="onPreviewImage(baseUrl + item.postPhotoUrl)">
+          <image  observeLazyLoad :showError="false" mode="widthFix" v-lazy="baseUrl + item.postPhotoUrl" @tap="onPreviewImage(baseUrl + item.postPhotoUrl)">
             <!-- <template #error>
               
             </template> -->
